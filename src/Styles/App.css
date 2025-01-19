@@ -1,0 +1,72 @@
+/* Palette :
+  #0B162C
+  #1C2942
+  #3B556D
+  #5FC2BA
+  #FFFFFF
+*/
+
+.app {
+  padding: 10px;
+}
+
+.nav-bar {
+  background-color: #0B162C;
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+  color: white;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.nav-bar .active {
+  background-color: #FFFF;
+  color: #0B162C;
+}
+
+.nav-bar button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100px;
+  height: 30px;
+  border-radius: 8px;
+}
+
+.nav-bar button:hover {
+  background-color: #3B556D;
+}
+
+.filter {
+  margin-bottom: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.filter .bar-search{
+  width: 10%;
+  transition: width 2s; 
+  border:  1px solid #3B556D;
+  border-radius: 8px;
+}
+
+.filter .bar-search:hover{
+  width: 80%;
+  border: 1px solid transparent;
+  border-color: #5FC2BA;
+}
+
+.container {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+}
+
+.iconSearch {
+  cursor: pointer;
+}
