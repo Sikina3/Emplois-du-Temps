@@ -1,10 +1,33 @@
 import './Styles/App.css';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button, TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [focus, setFocus] = useState(false);
+  const [clickedButtons, setClickedButtons] = useState([]);
+  const [isLoad, setIsLoad] = useState(null);
+
+  useEffect(() => {
+    const keyDown = (event) => {
+      if (event.ctrlKey && event.key === "k") {
+        event.preventDefault();
+        setFocus(true);
+      }
+
+      if (event.key === 'Escape') {
+        setFocus(false);
+      }
+    };
+
+    window.addEventListener('keydown', keyDown);
+
+    return () => {
+      window.removeEventListener('keydown', keyDown);
+    };
+  }, []);
 
   const data = useMemo(
     () => [
@@ -24,7 +47,6 @@ const App = () => {
       { name: 'Ka', subjects: ['Anglais'] },
       { name: 'Izy', subjects: ['COmpta'] },
       { name: 'apad', subjects: ['Gestion'] },
-
     ],
     []
   );
@@ -34,50 +56,90 @@ const App = () => {
     row.subjects.some(subject => subject.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
+  const ButtonClick = (rowIndex, subjectIndex) => {
+    const buttonKey = `${rowIndex}-${subjectIndex}`;
+    setClickedButtons(prev => (
+      prev.includes(buttonKey)
+        ? prev.filter(key => key !== buttonKey)
+        : [...prev, buttonKey]
+    ));
+  };
+
   return (
     <div className='app'>
-      <div className="nav-bar">
-        <button> L1 </button>
-        <button> L2 </button>
-        <button className='active'> L3 Info </button>
-        <button> L3 Maths </button>
-        <button> M1 Genie </button>
-        <button> M1 Image </button>
-        <button> M1 Maths </button>
-        <button> M2 Genie </button>
-        <button> M2 Image </button>
-        <button> M2 Maths </button>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className="nav-bar">
+          <button> L1 </button>
+          <button> L2 </button>
+          <button className='active'> L3 Info </button>
+          <button> L3 Maths </button>
+          <button> M1 Genie </button>
+          <button> M1 Image </button>
+          <button> M1 Maths </button>
+          <button> M2 Genie </button>
+          <button> M2 Image </button>
+          <button> M2 Maths </button>
+        </div>
       </div>
 
-      <div className="filter">
-        <TextField
-          label="recherche"
-          className='bar-search'
-          onChange={(e) => setSearchTerm(e.target.value)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position='start'>
-                <SearchIcon/>
-              </InputAdornment>
-            )
-          }}
-         />
-      </div>
+      {focus && (
+        <div className="filter" style={{
+          position: 'fixed',
+          width: '70%',
+          top: '10%',
+          left: '50%',
+          transform: 'translate(-50%, 0)',
+          zIndex: 1000,
+          backgroundColor: 'white',
+          padding: '0px',
+          boxShadow: '0px 0px 5px rgb(195, 195, 195)',
+          borderRadius: '8px'
+        }}
+        >
+          <TextField
+            label="recherche"
+            variant='outlined'
+            className='bar-search'
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='start'>
+                  <SearchIcon />
+                </InputAdornment>
+              )
+            }}
+            onFocus={() => setFocus(true)}
+            onBlur={() => setFocus(false)}
+          />
+        </div>
+      )}
 
-      <TableContainer component={Paper} className="container" style={{ maxHeight: 480 , height: 480, border: '0.5px solid #E8EDDF'}}>
+      <TableContainer component={Paper} className="container" style={{ maxHeight: 480, height: 480, border: '0.5px solid #E8EDDF', marginTop: '4%' }}>
         <Table stickyHeader>
           <TableBody>
-            {filteredData.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell>
+            {filteredData.map((row, rowIndex) => (
+              <TableRow key={rowIndex}>
+                <TableCell sx={{
+                  borderRight: '0.5px solid #E8EDDF'
+                }}>
                   {row.name}
-                  </TableCell>
+                </TableCell>
                 <TableCell>
-                  {row.subjects.map((subject, index) => (
-                    <Button key={index} variant="outlined" style={{ margin: 2 }}>
-                      {subject}
-                    </Button>
-                  ))}
+                  {row.subjects.map((subject, subjectIndex) => {
+                    const buttonKey = `${rowIndex}-${subjectIndex}`;
+                    const isClicked = clickedButtons.includes(buttonKey);
+                    return (
+                      <Button
+                        key={subjectIndex}
+                        variant="outlined"
+                        style={{ margin: 2, borderColor: isClicked ? '#0B162C' : '#3B556D', color: isClicked ? 'white' : '#3B556D', backgroundColor: isClicked ? '#3B556D' : 'white', fontSize: '12px'}}
+                        onClick={() => ButtonClick(rowIndex, subjectIndex)}
+                        endIcon={isClicked ? <EditIcon /> : null}
+                      >
+                        {subject}
+                      </Button>
+                    );
+                  })}
                 </TableCell>
               </TableRow>
             ))}
@@ -86,20 +148,21 @@ const App = () => {
       </TableContainer>
 
       <div className='container'>
-        <Button 
-            variant="contained" 
-            sx={{
-              backgroundColor: '#0B162C',
-              '&:hover': {
-                backgroundColor: '#3B556D',
-              },
-              color: 'white',
-              width: '10em',
-            }}
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: '#0B162C',
+            '&:hover': {
+              backgroundColor: '#3B556D',
+            },
+            color: 'white',
+            width: '10em'
+          }}
         >
           Generer
         </Button>
       </div>
+      <p> <SearchIcon /> Ctrl + k </p>
     </div>
   );
 };
