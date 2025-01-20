@@ -8,7 +8,7 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [focus, setFocus] = useState(false);
   const [clickedButtons, setClickedButtons] = useState([]);
-  const [isLoad, setIsLoad] = useState(null);
+  const [isLoad, setIsLoad] = useState(false);
 
   useEffect(() => {
     const keyDown = (event) => {
@@ -63,6 +63,14 @@ const App = () => {
         ? prev.filter(key => key !== buttonKey)
         : [...prev, buttonKey]
     ));
+  };
+
+  const click = ()=>{
+    setIsLoad(true);
+
+    setTimeout(() =>{
+      setIsLoad(false);
+    }, 10000);
   };
 
   return (
@@ -158,6 +166,9 @@ const App = () => {
             color: 'white',
             width: '10em'
           }}
+          onClick={click}
+          loading={isLoad}
+          loadingPosition='end'
         >
           Generer
         </Button>
