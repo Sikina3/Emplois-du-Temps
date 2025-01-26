@@ -10,7 +10,8 @@
   padding: 8px;
   font-family: 'Roboto';
   height: 100vh;
-  /* background-color: aqua; */
+  display: flex;
+  flex-direction: column;
 }
 
 .nav-bar {
@@ -45,13 +46,13 @@
 }
 
 .filter .bar-search{
-  width: 100%;
+  width: 75%;
   border:  0.5px solid #e3e8ed;
   border-radius: 8px;
+  box-shadow: '0px 0px 5px rgb(195, 195, 195)',
 }
 
 .container {
-  margin-bottom: 20px;
   display: flex;
   justify-content: flex-end;
   align-items: baseline;
@@ -64,7 +65,6 @@
 #raccourci {
   color: gray;
   font-size: 14px;
-  margin-top: -10px;
   display: flex;
   align-items: center;
 }

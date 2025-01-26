@@ -60,6 +60,10 @@ const App = () => {
       { name: 'Marthina', subjects: ['Bool'] },
       { name: 'Zety', subjects: ['Theorie'] },
       { name: 'Leode', subjects: ['Geometrie'] },
+      { name: 'Izy', subjects: ['COmpta'] },
+        { name: 'apad', subjects: ['Gestion'] },
+        { name: 'Izy', subjects: ['COmpta'] },
+        { name: 'apad', subjects: ['Gestion'] },
       ],
       'L3 Maths': [
         //en attente
@@ -132,16 +136,15 @@ const App = () => {
 
       {focus && (
         <div className="filter" style={{
-          position: 'fixed',
-          width: '70%',
-          top: '18%',
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'center',
+
+          width: 'calc(100%-24px)',
           left: '50%',
           transform: 'translate(-50%, 0)',
           zIndex: 1000,
-          backgroundColor: 'white',
           padding: '0px',
-          boxShadow: '0px 0px 5px rgb(195, 195, 195)',
-          borderRadius: '8px'
         }}
         >
           <TextField
@@ -162,7 +165,7 @@ const App = () => {
         </div>
       )}
 
-      <TableContainer component={Paper} className="container" style={{ maxHeight: 350, height: 350 , border: '0.5px solid #E8EDDF', marginTop: '4%' }}>
+      <TableContainer component={Paper} className="container" style={{maxHeight: 400 ,border: '0.5px solid #E8EDDF', marginTop: '2%'}}>
         <Table stickyHeader>
           <TableBody>
             {filteredData.map((row, rowIndex) => (
@@ -196,7 +199,7 @@ const App = () => {
         </Table>
       </TableContainer>
 
-      <div className='container'>
+      <div className='container' style={{marginTop: 'auto'}}>
         <Button
           variant="contained"
           sx={{
