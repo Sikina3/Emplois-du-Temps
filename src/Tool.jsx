@@ -1,7 +1,7 @@
 import React from 'react';
 import { createTheme, Box } from '@mui/material';
 import PropTypes from 'prop-types';
-import { Link, Outlet, useLocation } from 'react-router-dom'; // Import Outlet pour afficher les enfants
+import { Link, Outlet, useLocation } from 'react-router-dom'; 
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import ArticleIcon from '@mui/icons-material/Article';
