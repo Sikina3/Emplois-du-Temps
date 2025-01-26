@@ -1,14 +1,27 @@
 import './Styles/App.css';
 import { useMemo, useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button, TextField, InputAdornment } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button, TextField, InputAdornment, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 
 const App = () => {
+  const [selectedLevel, setSelectedLevel] = useState('L3 Info');
+
   const [searchTerm, setSearchTerm] = useState('');
   const [focus, setFocus] = useState(false);
   const [clickedButtons, setClickedButtons] = useState([]);
   const [isLoad, setIsLoad] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectData, setSelectData] = useState({name: '', subjects: []});
+
+  const clickOpen = (name, subject) => {
+    setSelectData({name, subject});
+    setOpenDialog(true);
+  };
+
+  const clickClose = () => {
+    setOpenDialog(false);
+  };
 
   useEffect(() => {
     const keyDown = (event) => {
@@ -30,34 +43,56 @@ const App = () => {
   }, []);
 
   const data = useMemo(
-    () => [
-      { name: 'Lorem Ipsum', subjects: ['Langage C++'] },
-      { name: 'VELO Jerome', subjects: ['Conception à Objet', 'UML', 'Intelligence Artificielle', 'Rédaction', 'Assembleur', 'Système d’Information'] },
-      { name: 'Dolor set', subjects: ['Java'] },
-      { name: 'Marco', subjects: ['Algebre 6'] },
-      { name: 'Karitaka', subjects: ['Java'] },
-      { name: 'Nandrianina', subjects: ['Algebre 2'] },
-      { name: 'Bao', subjects: ['Maths disc'] },
+    () => ({
+      'L1': [
+        { name: 'Lorem Ipsum', subjects: ['Langage C++'] },
+        { name: 'VELO Jerome', subjects: ['Conception à Objet', 'UML', 'Intelligence Artificielle', 'Rédaction', 'Assembleur', 'Système d’Information'] },
+        { name: 'Dolor set', subjects: ['Java'] },
+      ],
+
+      'L2': [
+        { name: 'Izy', subjects: ['COmpta'] },
+        { name: 'apad', subjects: ['Gestion'] },
+      ],
+      'L3 Info': [
       { name: 'Theodor', subjects: ['Topo'] },
       { name: 'Sao', subjects: ['tsy aiko'] },
       { name: 'Marthina', subjects: ['Bool'] },
       { name: 'Zety', subjects: ['Theorie'] },
       { name: 'Leode', subjects: ['Geometrie'] },
-      { name: 'Koto', subjects: ['Francais'] },
-      { name: 'Ka', subjects: ['Anglais'] },
-      { name: 'Izy', subjects: ['COmpta'] },
-      { name: 'apad', subjects: ['Gestion'] },
-    ],
+      ],
+      'L3 Maths': [
+        //en attente
+      ],
+      'M1 Image': [
+        //en attente
+      ],
+      'M1 Maths': [
+        //en attente
+      ],
+      'M1 Genie': [
+        //en attente
+      ],
+      'M2 Maths': [
+        //en attente
+      ],
+      'M2 Image': [
+        //en attente
+      ],
+      'M2 Genie': [
+        //en attente
+      ]
+    }),
     []
   );
 
-  const filteredData = data.filter(row =>
+  const filteredData = data[selectedLevel].filter(row =>
     row.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     row.subjects.some(subject => subject.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const ButtonClick = (rowIndex, subjectIndex) => {
-    const buttonKey = `${rowIndex}-${subjectIndex}`;
+    const buttonKey = `${selectedLevel}-${rowIndex}-${subjectIndex}`;
     setClickedButtons(prev => (
       prev.includes(buttonKey)
         ? prev.filter(key => key !== buttonKey)
@@ -73,20 +108,25 @@ const App = () => {
     }, 10000);
   };
 
+  const clickButtonMatier = (rowIndex, subjectIndex, name, sub) => {
+    ButtonClick(rowIndex, subjectIndex);
+    clickOpen(name, sub);
+  }
+
   return (
     <div className='app'>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div className="nav-bar">
-          <button> L1 </button>
-          <button> L2 </button>
-          <button className='active'> L3 Info </button>
-          <button> L3 Maths </button>
-          <button> M1 Genie </button>
-          <button> M1 Image </button>
-          <button> M1 Maths </button>
-          <button> M2 Genie </button>
-          <button> M2 Image </button>
-          <button> M2 Maths </button>
+        <button onClick={() => setSelectedLevel('L1')} className={selectedLevel === 'L1' ? 'active' : ''}> L1 </button> 
+        <button onClick={() => setSelectedLevel('L2')} className={selectedLevel === 'L2' ? 'active' : ''}> L2 </button> 
+        <button onClick={() => setSelectedLevel('L3 Info')} className={selectedLevel === 'L3 Info' ? 'active' : ''}> L3 Info </button> 
+        <button onClick={() => setSelectedLevel('L3 Maths')} className={selectedLevel === 'L3 Maths' ? 'active' : ''}> L3 Maths </button> 
+        <button onClick={() => setSelectedLevel('M1 Genie')} className={selectedLevel === 'M1 Genie' ? 'active' : ''}> M1 Genie </button> 
+        <button onClick={() => setSelectedLevel('M1 Image')} className={selectedLevel === 'M1 Image' ? 'active' : ''}> M1 Image </button> 
+        <button onClick={() => setSelectedLevel('M1 Maths')} className={selectedLevel === 'M1 Maths' ? 'active' : ''}> M1 Maths </button> 
+        <button onClick={() => setSelectedLevel('M2 Genie')} className={selectedLevel === 'M2 Genie' ? 'active' : ''}> M2 Genie </button> 
+        <button onClick={() => setSelectedLevel('M2 Image')} className={selectedLevel === 'M2 Image' ? 'active' : ''}> M2 Image </button> 
+        <button onClick={() => setSelectedLevel('M2 Maths')} className={selectedLevel === 'M2 Maths' ? 'active' : ''}> M2 Maths </button>
         </div>
       </div>
 
@@ -94,7 +134,7 @@ const App = () => {
         <div className="filter" style={{
           position: 'fixed',
           width: '70%',
-          top: '10%',
+          top: '18%',
           left: '50%',
           transform: 'translate(-50%, 0)',
           zIndex: 1000,
@@ -122,19 +162,20 @@ const App = () => {
         </div>
       )}
 
-      <TableContainer component={Paper} className="container" style={{ maxHeight: 480, height: 480, border: '0.5px solid #E8EDDF', marginTop: '4%' }}>
+      <TableContainer component={Paper} className="container" style={{ maxHeight: 350, height: 350 , border: '0.5px solid #E8EDDF', marginTop: '4%' }}>
         <Table stickyHeader>
           <TableBody>
             {filteredData.map((row, rowIndex) => (
               <TableRow key={rowIndex}>
                 <TableCell sx={{
-                  borderRight: '0.5px solid #E8EDDF'
+                  borderRight: '0.5px solid #E8EDDF',
+                  width: '250px'
                 }}>
                   {row.name}
                 </TableCell>
                 <TableCell>
                   {row.subjects.map((subject, subjectIndex) => {
-                    const buttonKey = `${rowIndex}-${subjectIndex}`;
+                    const buttonKey = `${selectedLevel}-${rowIndex}-${subjectIndex}`;
                     const isClicked = clickedButtons.includes(buttonKey);
                     return (
                       <Button
@@ -173,7 +214,40 @@ const App = () => {
           Generer
         </Button>
       </div>
-      <p> <SearchIcon /> Ctrl + k </p>
+
+      <p id='raccourci'> <SearchIcon /> Ctrl + k </p>
+
+      <Dialog
+        open={openDialog}
+        onClose={clickClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle id="alert-dialog-title">
+           {selectData.subject}
+        </DialogTitle>
+        <DialogContent id="alert-dialog-description">
+          <p> Prof : {selectData.name}</p>
+          <FormControl>
+            <RadioGroup
+              aria-labelledby='demo-radio-buttons-group-label'
+              row
+              defaultValue="Matin"
+              name='radio-buttons-group'
+            >
+              <FormControlLabel value="Matin" control={<Radio/>} label="Matin"/>
+              <FormControlLabel value="Apres-midi" control={<Radio/>} label="Apres-midi"/>
+            </RadioGroup>
+          </FormControl>
+          <p>Heure</p>
+          <p> Duree </p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={clickClose}>
+            Enregistrer
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

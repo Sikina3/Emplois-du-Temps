@@ -9,12 +9,13 @@
 .app {
   padding: 8px;
   font-family: 'Roboto';
-  height: 95vh;
+  height: 100vh;
+  /* background-color: aqua; */
 }
 
 .nav-bar {
   background-color: #0B162C;
-  padding: 10px;
+  padding: 12px;
   display: flex;
   justify-content: space-around;
   color: white;
@@ -60,7 +61,7 @@
   cursor: pointer;
 }
 
-p {
+#raccourci {
   color: gray;
   font-size: 14px;
   margin-top: -10px;
