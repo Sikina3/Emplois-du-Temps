@@ -1,8 +1,9 @@
-import './Styles/App.css';
+import '../Styles/App.css';
 import { useMemo, useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableRow, Paper, Button, TextField, InputAdornment, Dialog, DialogTitle, DialogContent, DialogActions, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Select, MenuItem} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
+import { useWeeks } from '../WeekProvider';
 
 const App = () => {
   const [selectedLevel, setSelectedLevel] = useState('L3 Info');
@@ -13,6 +14,17 @@ const App = () => {
   const [isLoad, setIsLoad] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectData, setSelectData] = useState({name: '', subjects: []});
+  const {weeks, setWeeks} = useWeeks();
+
+  const butonSave = () =>  {
+    const new_week = {
+      title: `Semaine de ${new Date().toLocaleDateString()}`,
+      selectData: {...selectData}
+    };
+    setWeeks((prevWeeks) => [...prevWeeks, new_week]);
+    clickClose();
+    console.log("cliquer");
+  }
 
   const clickOpen = (name, subject) => {
     setSelectData({name, subject});
@@ -200,6 +212,25 @@ const App = () => {
       </TableContainer>
 
       <div className='container' style={{marginTop: 'auto'}}>
+      <Button
+          variant="contained"
+          sx={{
+            backgroundColor: 'white',
+            color: '#0B162C',
+            '&:hover': {
+              backgroundColor: '#3B556D',
+              color: 'white',
+            },
+            width: '10em',
+            marginRight: '15px',
+            border: '1px solid #0B162C'
+          }}
+          onClick={butonSave}
+          loadingPosition='end'
+        >
+          Enregistrer
+        </Button>
+
         <Button
           variant="contained"
           sx={{

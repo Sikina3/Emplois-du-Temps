@@ -1,27 +1,32 @@
-import React from 'react';
-import { createTheme, Box } from '@mui/material';
-import PropTypes from 'prop-types';
-import { Link, Outlet, useLocation } from 'react-router-dom'; 
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import ArticleIcon from '@mui/icons-material/Article';
-import { AppProvider, DashboardLayout } from '@toolpad/core';
+import React from "react";
+import { createTheme, Box } from "@mui/material";
+import PropTypes from "prop-types";
+import { Outlet, useLocation } from "react-router-dom";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import ArticleIcon from "@mui/icons-material/Article";
+import { AppProvider, DashboardLayout } from "@toolpad/core";
+import { useWeeks } from "./WeekProvider";
+import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import AbcIcon from '@mui/icons-material/Abc';
+import SubjectIcon from '@mui/icons-material/Subject';
 
-import logoFST from '../public/logo_FST.png';
+import logoFST from "../public/logo_FST.png";
 
 const theme = createTheme({
   cssVariables: {
-    colorSchemeSelector: 'data-toolpad-color-scheme',
+    colorSchemeSelector: "data-toolpad-color-scheme",
   },
   colorSchemes: {
     light: {
       palette: {
-        mode: 'light',
+        mode: "light",
       },
     },
     dark: {
       palette: {
-        mode: 'dark',
+        mode: "dark",
       },
     },
   },
@@ -38,39 +43,70 @@ const theme = createTheme({
 
 function Tool() {
   const location = useLocation();
+  const {weeks} = useWeeks();
 
-  const EDT = location.pathname.includes('/app');
+  const EDT = location.pathname.includes("/");
+  const Admin = location.pathname.includes("/admin");
 
   const NAVIGATION = [
     {
-      segment: 'app',
-      title: 'Emplois du Temps',
+      kind: "header",
+      title: "Menu Principale"
+    },
+    {
+      segment: "app",
+      title: "Emplois du Temps",
       icon: <DashboardIcon />,
     },
     {
-      segment: 'admin',
-      title: 'Admin',
+      segment: "admin",
+      title: "Admin",
       icon: <AdminPanelSettingsIcon />,
     },
-    ...(EDT ? [
-      { kind: 'divider' },
-    {
-      segment: 'tool',
-      title: 'Outil',
-      icon: <ArticleIcon />,
-    },
-    ]
-  :[]),
-    
+    ...(EDT && weeks.length > 0
+      ? [
+          { kind: "divider" },
+          ...weeks.map((week, index) => ({
+            segment: `week-${index}`,
+            title: week.title,
+            icon: <ArticleIcon />,
+          })),
+        ]
+      : []),
+    ...(Admin ? [
+      {
+        kind: "divider",
+      },
+      {
+        segment: "admin/prof",
+        title: "Professeur",
+        icon: <SchoolRoundedIcon/>
+      },
+      {
+        segment: "admin/niveau",
+        title: "Niveau",
+        icon: <AbcIcon/>,
+      },
+      {
+        segment: "admin/matiere",
+        title: "Matière",
+        icon: <SubjectIcon/>,
+      },
+      {
+        segment: "admin/salle",
+        title: "Salle",
+        icon: <MeetingRoomIcon/>
+      },
+    ] : []),
   ];
 
   return (
     <AppProvider
       navigation={NAVIGATION}
       branding={{
-        logo: <img src={logoFST} alt="Logo FST" />,
-        title: '',
-        homeUrl: '/',
+        logo: <img src={logoFST} alt="Logo FST" style={{scale: '2', marginLeft: '20px'}}/>,
+        title: "",
+        homeUrl: "/",
       }}
       theme={theme}
     >
@@ -78,14 +114,13 @@ function Tool() {
         <Box
           sx={{
             py: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
           }}
-        >
-        </Box>
-        <Outlet /> 
+        ></Box>
+        <Outlet />
       </DashboardLayout>
     </AppProvider>
   );

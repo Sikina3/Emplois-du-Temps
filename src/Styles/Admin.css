@@ -1,0 +1,7 @@
+.app {
+    padding: 8px;
+    font-family: 'Roboto';
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
