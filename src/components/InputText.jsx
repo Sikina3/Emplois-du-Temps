@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 
-function InputText({label}){
+function InputText({label, sx}){
     return (
         <>
         <TextField
@@ -10,8 +10,11 @@ function InputText({label}){
         sx={{
           backgroundColor: "#f0f0f0",
           input: { color: "black", fontSize: "14px" }, 
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "0px", 
+          },
+          ...sx
         }}
-        fullWidth
       />
         </>
     );

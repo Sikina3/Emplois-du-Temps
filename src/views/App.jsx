@@ -1,18 +1,26 @@
-import { useState } from 'react'
-import '../styles/App.css'
-import Custom_Sidebar from '../components/navigations/Sidebar'
-import TopNavbar from '../components/navigations/TopNavBar'
-import CustomButton from '../components/buttons/CustomButton'
-import AddIcon from '@mui/icons-material/Add';
-import CardSubject from '../components/CardSubject'
+import { useState } from "react";
+import "../styles/App.css";
+import Custom_Sidebar from "../components/navigations/Sidebar";
+import TopNavbar from "../components/navigations/TopNavBar";
+import CustomButton from "../components/buttons/CustomButton";
+import AddIcon from "@mui/icons-material/Add";
+import CardSubject from "../components/CardSubject";
+import { Typography } from "@mui/material";
+import InputText from "../components/InputText";
 
 function App() {
   const titre = [
     { titre: "Licence 1", levels: ["tronc commun"] },
     { titre: "licence 2", levels: ["tronc commun"] },
     { titre: "Licence 3", levels: ["Maths info", "Ac. Info"] },
-    { titre: "Master 1", levels: ["Ing. Maths", "img. Interaction", "genie info"] },
-    { titre: "Master 2", levels: ["Ing. Maths", "img. Interaction", "genie info"] },
+    {
+      titre: "Master 1",
+      levels: ["Ing. Maths", "img. Interaction", "genie info"],
+    },
+    {
+      titre: "Master 2",
+      levels: ["Ing. Maths", "img. Interaction", "genie info"],
+    },
   ];
 
   const profs = [
@@ -49,33 +57,45 @@ function App() {
     "Technologie",
     "Urbanisme",
     "Virologie",
-    "Zoologie"
+    "Zoologie",
   ];
-  
 
-  const uniqueLetters = [...new Set(titre_matiere.map((titre) => titre[0].toUpperCase()))];
+  const uniqueLetters = [
+    ...new Set(titre_matiere.map((titre) => titre[0].toUpperCase())),
+  ];
 
   return (
     <>
       <TopNavbar titlesWithLevels={titre} />
-      <div className='container'>
+      <div className="container">
         <Custom_Sidebar profs={profs} />
 
-        <div className='right-div'>
-          <CustomButton label={"Créer un nouveau module"} variant={"contained"} endIcon={<AddIcon />} sx={{marginBottom: 5}} />
-          
-          <div className='cards-container'>
-  {uniqueLetters.map((letter, index) => (
-    <div key={index} className="card-wrapper">
-      <CardSubject titles={titre_matiere} letter={letter} />
-    </div>
-  ))}
-</div>
+        <div className="right-div">
+          <div className="div-chearch">
+            {/** Place du bar de recherche */}
+            <Typography variant="overline">
+              Tout les cours enseignés par : 
+            </Typography>
 
+            <InputText label={"Rechercher une matiere"} sx={{width: "50%"}}/>
+          </div>
 
-          <div>
-            <CustomButton label="Enregistrer"/>
-            <CustomButton label="Generer" variant={"contained"}/>
+          <div className="div-creation">
+            {/**Button et son accolite */}
+            <CustomButton label={"Crée un nouveau module"} startIcon={<AddIcon/>} variant={"contained"}/>
+          </div>
+
+          <div className="cards-container"> {/**Les cards  */}
+            {uniqueLetters.map((letter, index) => (
+              <div key={index} className="card-wrapper">
+                <CardSubject titles={titre_matiere} letter={letter} />
+              </div>
+            ))}
+          </div>
+
+          <div className="action-button"> {/** et Les boutons d'action pour finir */}
+            <CustomButton label="Enregistrer" />
+            <CustomButton label="Generer" variant={"contained"} />
           </div>
         </div>
       </div>

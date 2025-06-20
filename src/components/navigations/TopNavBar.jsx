@@ -24,7 +24,7 @@ function TopNavbar({ titlesWithLevels }) {
         }}
       >
         <Box
-          sx={{ display: "flex", alignItems: "center", paddingX: 9, mr: 0.5 }}
+          sx={{ display: "flex", alignItems: "center", paddingX: 8, mr: 0.5 }}
         >
           <Typography variant="h5" sx={{ fontWeight: "bold", color: "#FFF" }}>
             LOGO
@@ -79,14 +79,14 @@ function TopNavbar({ titlesWithLevels }) {
               justifyContent: "center",
               alignItems: "center",
               padding: 0,
-              width: 30,
+              width: 40,
               marginLeft: 1.5
             }}
           >
             <Typography variant="h6" sx={{ visibility: "hidden", marginBottom: 1 }}>
               Invisible
             </Typography>
-            <FabButton size={"small"} />
+            <FabButton size={"small"}/>
           </Grid>
         </Grid>
       </Toolbar>

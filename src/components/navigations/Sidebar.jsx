@@ -19,6 +19,7 @@ function Custom_Sidebar({profs}) {
     <Box
       sx={{
         width: 234,
+        minWidth: 234,
         height: "100vh",
         backgroundColor: "#3B556D",
         color: "#FFFFFF",
@@ -46,7 +47,7 @@ function Custom_Sidebar({profs}) {
         </Typography>
         <FabButton size="small" sx={{width: "20px", height: "20px"}} />
       </Box>
-      <InputText label={"recherche professeurs"}/>
+      <InputText label={"recherche professeurs"} sx={{width: "100%"}}/>
       <ButtonSecondary 
         label={"Tout les professeurs"} 
         variant={"contained"} 

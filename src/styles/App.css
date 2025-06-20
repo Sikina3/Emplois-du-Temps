@@ -1,8 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }  
+
 body {
     margin: 0;
     padding: 0;
     height: 100%;
     overflow: hidden;
+    display: flex;
 }
 
 div .container {
@@ -11,6 +18,8 @@ div .container {
 }
 
 div .right-div {
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
     padding: 20px;
     overflow: hidden;
@@ -32,6 +41,27 @@ div .right-div {
     width: 25%;
     box-sizing: border-box;
     padding: 10px;
+  }
+
+  .div-chearch{
+    /* background-color: red; */
+    display: flex;
+    flex: 1;
+    padding: 0 15px 0 15px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .div-creation {
+    background-color: blue;
+    display: flex;
+    flex:1;
+    align-items: center;
+  }
+
+  .action-button{
+    background-color: pink;
+    flex:1;
   }
   
 
