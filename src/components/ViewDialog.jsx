@@ -1,62 +1,54 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
-import InputText from './InputText';
+import { Dialog, DialogTitle, DialogContent, IconButton, Table, TableHead, TableRow, TableCell, TableBody, DialogActions } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CustomButton from './buttons/CustomButton';
+import EditIcon from "@mui/icons-material/Edit"; 
 
-const BootstrapDialog = styled(Dialog)(({theme}) => ({
-    '& .MuiDialogContent-root': {
-        padding: theme.spacing(2),
-    },
-    '& .MuiDialogActions-root': {
-        padding: theme.spacing(1),
-    },
-}));
+export default function ViewDialog({modifie, ondelete, handleClose, open, salles}){
+    return(
+        <Dialog open={open} onClose={handleClose}>
+            <DialogTitle> Liste des salles </DialogTitle>
+            <DialogContent sx={{width: "600px"}}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Nom de Salle</TableCell>
+                            <TableCell> Capacité </TableCell>
+                            <TableCell> Assigné à </TableCell>
+                            <TableCell> Actions </TableCell>
+                        </TableRow>
+                    </TableHead>
 
-export default function ViewDialog({handleClose, open, titre, onClick, champs})  {
-    return (
-        <React.Fragment>
-            <BootstrapDialog
-                onClose={handleClose}
-                aria-labelledby="customized-dialog-title"
-                open={open}
-            >
-                <DialogTitle sx={{m: 0, p: 2, backgroundColor: "#A1B4C6", color: "white"}} id="customized-dialog-title">
-                    {titre}
-                </DialogTitle>
-                <IconButton
-                    aria-label="close"
-                    onClick={handleClose}
-                    sx={(theme) => ({
-                      position: 'absolute',
-                      right: 8,
-                      top: 8,
-                      color: "white",
-                    })}
-                >
-                    <CloseIcon/>
-                </IconButton>
-                <DialogContent dividers sx={{width: "600px",}}>
-                    {champs.map((champ) => (
-                        <InputText 
-                            label={champ.name}
-                            sx={{width: "100%", marginBottom: 1.5}}/>
-                    ))}
-                </DialogContent>
-                <DialogActions>
+                    <TableBody>
+                        {salles.map((salle, index) => (
+                            <TableRow key={index}>
+                                <TableCell>
+                                    {salle.nom}
+                                </TableCell>
+                                <TableCell>
+                                    {salle.capacite}
+                                </TableCell>
+                                <TableCell>
+                                    {salle.assigne}
+                                </TableCell>
+                                <TableCell>
+                                    <IconButton>
+                                        <EditIcon/>
+                                    </IconButton>
+                                    <IconButton>
+                                        <DeleteIcon/>
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </DialogContent>
+            <DialogActions>
                     <CustomButton 
                         label={"Ajouter"} 
                         variant={"contained"}
-                        sx={{paddingX: 10, paddingY: 1}}/>
-                </DialogActions>
-            </BootstrapDialog>
-        </React.Fragment>
+                        sx={{ width: "100%"}}/>
+            </DialogActions>
+        </Dialog>
     );
 }

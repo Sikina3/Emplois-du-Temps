@@ -7,6 +7,7 @@ import InputText from "../InputText";
 import CustomButton from "../buttons/CustomButton";
 import ButtonSecondary from "../buttons/ButtonSecondary";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import CreateDialog from "../CreateDialog";
 import ViewDialog from "../ViewDialog";
 
 function Custom_Sidebar({profs}) {
@@ -17,6 +18,7 @@ function Custom_Sidebar({profs}) {
   };
 
   const [open, setOpen] = React.useState(false);
+  const [openView, setOpenView] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -25,6 +27,12 @@ function Custom_Sidebar({profs}) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const [salles, setSalles] = useState([
+    { nom: "Labo 1", capacite: 30, assigne: "L3"},
+    { nom: "Confimia", capacite: 102, assigne: "L2"},
+    { nom: "Bat02", capacite: 400, assigne: "L1"},
+  ]);
 
   return (
     <Box
@@ -57,7 +65,7 @@ function Custom_Sidebar({profs}) {
           Professeurs
         </Typography>
         <FabButton size="small" sx={{width: "20px", height: "20px"}} onClick={handleClickOpen} />
-        <ViewDialog 
+        <CreateDialog 
           open={open} 
           handleClose={handleClose} 
           titre={"Création de professeurs"}
@@ -108,7 +116,13 @@ function Custom_Sidebar({profs}) {
           bottom: 90,
           left: 0,
           width: "100%"
-        }}/>
+        }}
+        onClick={() => setOpenView(true)}/>
+        <ViewDialog
+          handleClose={() => setOpenView(false)}
+          open={openView}
+          salles={salles}
+        />
     </Box>
   );
 }

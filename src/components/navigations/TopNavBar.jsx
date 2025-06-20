@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { Grid } from "@mui/material";
 import ButtonSecondary from "../buttons/ButtonSecondary";
 import FabButton from "../buttons/FabButton";
-import ViewDialog from "../ViewDialog";
+import CreateDialog from "../CreateDialog";
 
 function TopNavbar({ titlesWithLevels }) {
   const [activeButton, setActiveButton] = useState("Tout Niveau");
@@ -43,7 +43,7 @@ function TopNavbar({ titlesWithLevels }) {
         </Box>
 
         <Grid container alignItems="stretch">
-          <Grid item sx={{ textAlign: "center" }}>
+          <Grid sx={{ textAlign: "center" }}>
             <Typography
               variant="h6"
               sx={{ visibility: "hidden", marginBottom: 1 }}
@@ -58,7 +58,7 @@ function TopNavbar({ titlesWithLevels }) {
             />
           </Grid>
           {titlesWithLevels.map((item, index) => (
-            <Grid item key={index} sx={{ textAlign: "center" }}>
+            <Grid key={index} sx={{ textAlign: "center" }}>
               <Typography
                 variant="h6"
                 sx={{
@@ -83,7 +83,6 @@ function TopNavbar({ titlesWithLevels }) {
             </Grid>
           ))}
           <Grid
-            item
             sx={{
               textAlign: "center",
               // backgroundColor: "red",
@@ -101,7 +100,7 @@ function TopNavbar({ titlesWithLevels }) {
               Invisible
             </Typography>
             <FabButton size={"small"} onClick={handleClickOpen} />
-            <ViewDialog
+            <CreateDialog
               open={open}
               handleClose={handleClose}
               titre={"Création de professeurs"}
