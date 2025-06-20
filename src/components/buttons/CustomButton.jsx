@@ -1,9 +1,10 @@
 import { Button } from "@mui/material";
 
-function CustomButton({ label, width, height, variant, startIcon, endIcon, sx }) {
+function CustomButton({ label, width, height, variant, startIcon, endIcon, sx, onClick }) {
   return (
     <Button
       variant={variant}
+      onClick={onClick}
         sx={{
         width: width, 
         height: height,

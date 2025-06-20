@@ -7,12 +7,23 @@ import InputText from "../InputText";
 import CustomButton from "../buttons/CustomButton";
 import ButtonSecondary from "../buttons/ButtonSecondary";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ViewDialog from "../ViewDialog";
 
 function Custom_Sidebar({profs}) {
   const [activeButton, setActiveButton] = useState("Tout les professeurs");
 
   const handleButtonClick = (label) => {
     setActiveButton(label);
+  };
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -45,8 +56,17 @@ function Custom_Sidebar({profs}) {
         >
           Professeurs
         </Typography>
-        <FabButton size="small" sx={{width: "20px", height: "20px"}} />
+        <FabButton size="small" sx={{width: "20px", height: "20px"}} onClick={handleClickOpen} />
+        <ViewDialog 
+          open={open} 
+          handleClose={handleClose} 
+          titre={"Création de professeurs"}
+          champs={[
+            {label: "Nom", name: "nom"},
+            {label: "Prenom", name: "Prenom"},
+          ]}/>
       </Box>
+
       <InputText label={"recherche professeurs"} sx={{width: "100%"}}/>
       <ButtonSecondary 
         label={"Tout les professeurs"} 

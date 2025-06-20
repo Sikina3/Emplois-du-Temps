@@ -6,12 +6,23 @@ import Typography from "@mui/material/Typography";
 import { Grid } from "@mui/material";
 import ButtonSecondary from "../buttons/ButtonSecondary";
 import FabButton from "../buttons/FabButton";
+import ViewDialog from "../ViewDialog";
 
 function TopNavbar({ titlesWithLevels }) {
   const [activeButton, setActiveButton] = useState("Tout Niveau");
 
   const handleButtonClick = (label) => {
     setActiveButton(label);
+  };
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -80,13 +91,25 @@ function TopNavbar({ titlesWithLevels }) {
               alignItems: "center",
               padding: 0,
               width: 40,
-              marginLeft: 1.5
+              marginLeft: 1.5,
             }}
           >
-            <Typography variant="h6" sx={{ visibility: "hidden", marginBottom: 1 }}>
+            <Typography
+              variant="h6"
+              sx={{ visibility: "hidden", marginBottom: 1 }}
+            >
               Invisible
             </Typography>
-            <FabButton size={"small"}/>
+            <FabButton size={"small"} onClick={handleClickOpen} />
+            <ViewDialog
+              open={open}
+              handleClose={handleClose}
+              titre={"Création de professeurs"}
+              champs={[
+                { label: "Nom", name: "nom" },
+                { label: "Effectif", name: "effectif" },
+              ]}
+            />
           </Grid>
         </Grid>
       </Toolbar>
