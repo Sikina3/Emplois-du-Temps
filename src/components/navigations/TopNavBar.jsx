@@ -31,7 +31,7 @@ function TopNavbar({ titlesWithLevels }) {
           </Typography>
         </Box>
 
-        <Grid container justifyContent="center" alignItems="stretch">
+        <Grid container alignItems="stretch">
           <Grid item sx={{ textAlign: "center" }}>
             <Typography
               variant="h6"

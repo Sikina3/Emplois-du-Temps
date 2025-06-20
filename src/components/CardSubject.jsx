@@ -1,3 +1,4 @@
+import { CheckBox } from "@mui/icons-material";
 import { Card, CardContent, CardHeader, Typography } from "@mui/material";
 
 function CardSubject(){
@@ -9,9 +10,7 @@ function CardSubject(){
                 titleTypographyProps={{variant: "body2", fontSize: 14, color: "white", fontWeight: "bold"}}
             />
             <CardContent>
-                <Typography variant="body2">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab, earum. Hic, doloribus!
-                </Typography>
+                <CheckBox />
             </CardContent>
         </Card>
     );
