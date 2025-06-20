@@ -1,10 +1,10 @@
 import { Button } from "@mui/material";
 
-function CustomButton({ label, width, height, variant, startIcon, endIcon }) {
+function CustomButton({ label, width, height, variant, startIcon, endIcon, sx }) {
   return (
     <Button
       variant={variant}
-      sx={{
+        sx={{
         width: width, 
         height: height,
         borderRadius: 0,
@@ -18,7 +18,8 @@ function CustomButton({ label, width, height, variant, startIcon, endIcon }) {
           boxShadow: "none"
         },
         paddingX: 2,
-        paddingY: 1.5
+        paddingY: 1.5,
+        ...sx,
       }}
       startIcon={startIcon}
       endIcon={endIcon}

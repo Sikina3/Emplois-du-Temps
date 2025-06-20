@@ -1,50 +1,93 @@
 import * as React from "react";
+import {useState} from "react";
 import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import { Divider, Typography } from "@mui/material";
+import FabButton from "../buttons/FabButton";
+import InputText from "../InputText";
+import CustomButton from "../buttons/CustomButton";
+import ButtonSecondary from "../buttons/ButtonSecondary";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-function Custom_Sidebar() {
+function Custom_Sidebar({profs}) {
+  const [activeButton, setActiveButton] = useState("Tout les professeurs");
+
+  const handleButtonClick = (label) => {
+    setActiveButton(label);
+  };
+
   return (
     <Box
       sx={{
-        width: 250,
+        width: 234,
         height: "100vh",
-        backgroundColor: "#3B556D", 
-        color: "#FFFFFF"
+        backgroundColor: "#3B556D",
+        color: "#FFFFFF",
+        position: "relative",
       }}
       role="presentation"
     >
-      <List>
-        {["Professeurs"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
+      <Box
+        sx={{
+          pb: 0,
+          backgroundColor: "#A1B4C6",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          height: "50px",
+          paddingX: 2,
+          alignItems: "center",
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          sx={{ marginRight: 4, fontSize: "14px" }}
+        >
+          Professeurs
+        </Typography>
+        <FabButton size="small" sx={{width: "20px", height: "20px"}} />
+      </Box>
+      <InputText label={"recherche professeurs"}/>
+      <ButtonSecondary 
+        label={"Tout les professeurs"} 
+        variant={"contained"} 
+        endIcon={<MoreVertIcon/>} 
+        isActive={activeButton === "Tout les professeurs"}
+        onClick={() => handleButtonClick("Tout les professeurs")}
+        sx={{width: "100%", justifyContent: "space-between", marginTop: 5}}/>
+      <Divider/>
+      <Box
+        sx={{
+          marginTop: 2,
+          height: "calc(100vh - 200px)", 
+          overflowY: "auto",
+        }}
+      >
+        {profs.map((prof, index) => (
+          <ButtonSecondary
+            key={index}
+            label={prof.nom}
+            variant={"contained"}
+            sx={{
+              width: "100%",
+              fontSize: "12px",
+              justifyContent: "space-between"
+            }}
+            isActive={activeButton === prof.nom}
+            onClick={() => handleButtonClick(prof.nom)}
+            endIcon={<MoreVertIcon/>}
+          />
         ))}
-      </List>
-      <Divider />
-      <List>
-        {["Tout les professeurs"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      </Box>
+
+      <CustomButton 
+        label={"Gestion des Salles de classes"} 
+        variant={"contained"}
+        sx={{
+          position: "absolute",
+          bottom: 90,
+          left: 0,
+          width: "100%"
+        }}/>
     </Box>
   );
 }
