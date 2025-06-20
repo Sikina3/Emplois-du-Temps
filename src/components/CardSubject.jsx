@@ -14,7 +14,7 @@ function CardSubject({ titles, letter, sx }) {
   );
 
   return (
-    <Card sx={{ maxWidth: 345, marginBottom: 2, ...sx }}>
+    <Card sx={{ maxWidth: 300, marginBottom: 2, ...sx }}>
       <CardHeader
         title={letter.toUpperCase()}
         sx={{ backgroundColor: "#A1B4C6", height: 6 }}

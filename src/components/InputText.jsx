@@ -8,7 +8,7 @@ function InputText({label, sx}){
         variant="outlined"
         InputLabelProps={{ shrink: false }} 
         sx={{
-          backgroundColor: "#f0f0f0",
+          backgroundColor: "#fff",
           input: { color: "black", fontSize: "14px" }, 
           "& .MuiOutlinedInput-root": {
             borderRadius: "0px", 

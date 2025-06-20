@@ -5,8 +5,9 @@ import TopNavbar from "../components/navigations/TopNavBar";
 import CustomButton from "../components/buttons/CustomButton";
 import AddIcon from "@mui/icons-material/Add";
 import CardSubject from "../components/CardSubject";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import InputText from "../components/InputText";
+import ButtonSelect from "../components/buttons/ButtonSelect";
 
 function App() {
   const titre = [
@@ -74,18 +75,34 @@ function App() {
           <div className="div-chearch">
             {/** Place du bar de recherche */}
             <Typography variant="overline">
-              Tout les cours enseignés par : 
+              Tout les cours enseignés par :
             </Typography>
 
-            <InputText label={"Rechercher une matiere"} sx={{width: "50%"}}/>
+            <InputText label={"Rechercher une matiere"} sx={{ width: "50%" }} />
           </div>
 
           <div className="div-creation">
             {/**Button et son accolite */}
-            <CustomButton label={"Crée un nouveau module"} startIcon={<AddIcon/>} variant={"contained"}/>
+            <CustomButton
+              label={"Crée un nouveau module"}
+              startIcon={<AddIcon />}
+              variant={"contained"}
+            />
+            <div style={{display: "flex", alignItems: "center"}}>
+              <Typography variant="overline">
+                trier par :
+              </Typography>
+              <ButtonSelect
+                options={["Ordre alphabetique", "Par niveau", "Option 3"]}
+                placeholder="Sélectionner un module"
+                onChange={(val) => console.log("Tu as choisi :", val)}
+              />
+            </div>
           </div>
 
-          <div className="cards-container"> {/**Les cards  */}
+          <div className="cards-container">
+            {" "}
+            {/**Les cards  */}
             {uniqueLetters.map((letter, index) => (
               <div key={index} className="card-wrapper">
                 <CardSubject titles={titre_matiere} letter={letter} />
@@ -93,9 +110,17 @@ function App() {
             ))}
           </div>
 
-          <div className="action-button"> {/** et Les boutons d'action pour finir */}
-            <CustomButton label="Enregistrer" />
-            <CustomButton label="Generer" variant={"contained"} />
+          <div className="action-button">
+            {" "}
+            {/** et Les boutons d'action pour finir */}
+            <CustomButton 
+              label="Enregistrer"
+              sx={{paddingY: 0.5, paddingX: 6}} />
+
+            <CustomButton 
+              label="Generer" 
+              variant={"contained"}
+              sx={{paddingY: 0.5, paddingX: 6}} />
           </div>
         </div>
       </div>
