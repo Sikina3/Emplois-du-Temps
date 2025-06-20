@@ -22,6 +22,39 @@ function App() {
     { nom: "Andriamasinoro Hajaniarina" },
   ];
 
+  const titre_matiere = [
+    "Analyse 1",
+    "Algèbre",
+    "Astronomie",
+    "Biologie",
+    "Chimie",
+    "Droit",
+    "Économie",
+    "Français",
+    "Géométrie",
+    "Histoire",
+    "Informatique",
+    "Journalisme",
+    "Kinésiologie",
+    "Littérature",
+    "Mathématiques",
+    "Nutrition",
+    "Océanographie",
+    "Philosophie",
+    "Physique",
+    "Programmation",
+    "Quantique",
+    "Robotique",
+    "Sciences de la Terre",
+    "Technologie",
+    "Urbanisme",
+    "Virologie",
+    "Zoologie"
+  ];
+  
+
+  const uniqueLetters = [...new Set(titre_matiere.map((titre) => titre[0].toUpperCase()))];
+
   return (
     <>
       <TopNavbar titlesWithLevels={titre} />
@@ -29,8 +62,21 @@ function App() {
         <Custom_Sidebar profs={profs} />
 
         <div className='right-div'>
-          <CustomButton label={"Créer un nouveau module"} variant={"contained"} endIcon={<AddIcon />} sx={{marginBottom: 12}} />
-          <CardSubject/>
+          <CustomButton label={"Créer un nouveau module"} variant={"contained"} endIcon={<AddIcon />} sx={{marginBottom: 5}} />
+          
+          <div className='cards-container'>
+  {uniqueLetters.map((letter, index) => (
+    <div key={index} className="card-wrapper">
+      <CardSubject titles={titre_matiere} letter={letter} />
+    </div>
+  ))}
+</div>
+
+
+          <div>
+            <CustomButton label="Enregistrer"/>
+            <CustomButton label="Generer" variant={"contained"}/>
+          </div>
         </div>
       </div>
     </>

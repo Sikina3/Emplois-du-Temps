@@ -20,6 +20,7 @@ function ButtonSecondary({ label, width, height, variant, startIcon, endIcon, sx
         },
         paddingX: 2,
         paddingY: 1.5,
+        justifyContent: "flex-start",
         ...sx,
       }}
       startIcon={startIcon}
