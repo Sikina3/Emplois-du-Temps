@@ -35,7 +35,7 @@ function TopNavbar({ titlesWithLevels }) {
         }}
       >
         <Box
-          sx={{ display: "flex", alignItems: "center", paddingX: 8, mr: 0.5 }}
+          sx={{ display: "flex", alignItems: "center", paddingX: 9, mr: 0.5 }}
         >
           <Typography variant="h5" sx={{ fontWeight: "bold", color: "#FFF" }}>
             LOGO

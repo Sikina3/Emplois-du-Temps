@@ -9,8 +9,11 @@ import {
 import ButtonSecondary from "./buttons/ButtonSecondary";
 
 function CardSubject({ titles, letter, sx }) {
-  const filtreTitle = titles.filter((title) =>
-    title.toLowerCase().startsWith(letter.toLowerCase())
+  console.log("Titles:", titles);
+  console.log("Letter:", letter);
+  
+  const filtreTitle = titles.filter((subject) =>
+    subject.name.toLowerCase().startsWith(letter.toLowerCase())
   );
 
   return (
@@ -27,11 +30,11 @@ function CardSubject({ titles, letter, sx }) {
       />
       <CardContent>
         {filtreTitle.length > 0 ? (
-          filtreTitle.map((title, index) => (
+          filtreTitle.map((subject, index) => (
             <ButtonSecondary
-              key={index}
+              key={subject.id || index}
               startIcon={<Checkbox />}
-              label={title}
+              label={subject.name}
               endIcon={
                 <MoreVertIcon
                   sx={{

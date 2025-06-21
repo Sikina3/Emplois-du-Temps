@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/App.css";
 import Custom_Sidebar from "../components/navigations/Sidebar";
 import TopNavbar from "../components/navigations/TopNavBar";
@@ -8,6 +8,7 @@ import CardSubject from "../components/CardSubject";
 import { Box, Typography } from "@mui/material";
 import InputText from "../components/InputText";
 import ButtonSelect from "../components/buttons/ButtonSelect";
+import URL_API from "../config/api";
 
 function App() {
   const titre = [
@@ -23,53 +24,31 @@ function App() {
       levels: ["Ing. Maths", "img. Interaction", "genie info"],
     },
   ];
+  const [subjects, setSubjects] = useState([]);
 
-  const profs = [
-    { nom: "Rakotonandrasana Marco" },
-    { nom: "Velo Jérôme" },
-    { nom: "Feno Rajaonasy Daniel" },
-    { nom: "Andriamasinoro Hajaniarina" },
-  ];
-
-  const titre_matiere = [
-    "Analyse 1",
-    "Algèbre",
-    "Astronomie",
-    "Biologie",
-    "Chimie",
-    "Droit",
-    "Économie",
-    "Français",
-    "Géométrie",
-    "Histoire",
-    "Informatique",
-    "Journalisme",
-    "Kinésiologie",
-    "Littérature",
-    "Mathématiques",
-    "Nutrition",
-    "Océanographie",
-    "Philosophie",
-    "Physique",
-    "Programmation",
-    "Quantique",
-    "Robotique",
-    "Sciences de la Terre",
-    "Technologie",
-    "Urbanisme",
-    "Virologie",
-    "Zoologie",
-  ];
+  useEffect(() => {
+    fetch(`${URL_API}/subject`)
+      .then((response) => response.json())
+      .then((data) => {
+        setSubjects(data);
+        console.log("Fetche subjects: ", data); 
+      })
+      .catch((error) => console.error("Error: ", error));
+  }, []);
 
   const uniqueLetters = [
-    ...new Set(titre_matiere.map((titre) => titre[0].toUpperCase())),
+    ...new Set(
+      subjects
+        .filter((titre) => titre && titre.name)
+        .map((titre) => titre.name[0].toUpperCase())),
   ];
+  console.log("Unique letters:", uniqueLetters);
 
   return (
     <>
       <TopNavbar titlesWithLevels={titre} />
       <div className="container">
-        <Custom_Sidebar profs={profs} />
+        <Custom_Sidebar />
 
         <div className="right-div">
           <div className="div-chearch">
@@ -105,7 +84,8 @@ function App() {
             {/**Les cards  */}
             {uniqueLetters.map((letter, index) => (
               <div key={index} className="card-wrapper">
-                <CardSubject titles={titre_matiere} letter={letter} />
+                <CardSubject titles={subjects} letter={letter} />
+                {console.log(letter)}
               </div>
             ))}
           </div>
