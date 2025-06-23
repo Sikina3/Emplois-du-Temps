@@ -8,7 +8,7 @@ import ButtonSecondary from "../buttons/ButtonSecondary";
 import FabButton from "../buttons/FabButton";
 import CreateDialog from "../CreateDialog";
 
-function TopNavbar({ titlesWithLevels }) {
+function TopNavbar({ levels }) {
   const [activeButton, setActiveButton] = useState("Tout Niveau");
 
   const handleButtonClick = (label) => {
@@ -23,6 +23,21 @@ function TopNavbar({ titlesWithLevels }) {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const trankName = (name, maxLength = 15) => {
+    if (name.length > maxLength) {
+      const words = name
+        .split(" ")
+        .filter(word => !"et".includes(word.toLowerCase()));
+  
+      const firstInitial =  words[0].substring(0, 4);
+      const secondInitial = words[1].substring(0, 4);
+  
+      return `${firstInitial} . ${secondInitial}`.toLowerCase(); 
+    }
+  
+    return name;
   };
 
   return (
@@ -57,31 +72,33 @@ function TopNavbar({ titlesWithLevels }) {
               onClick={() => handleButtonClick("Tout Niveau")}
             />
           </Grid>
-          {titlesWithLevels.map((item, index) => (
-            <Grid key={index} sx={{ textAlign: "center" }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  color: "#FFF",
-                  marginBottom: 1,
-                  fontSize: 14,
-                  marginTop: 1.2,
-                }}
-              >
-                {item.titre}
-              </Typography>
+          {Array.isArray(levels) &&
+            levels.map((level, index) => (
+              <Grid key={level.id || index} sx={{ textAlign: "center" }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: "#FFF",
+                    marginBottom: 1,
+                    fontSize: 14,
+                    marginTop: 1.2,
+                  }}
+                >
+                  {level.name}
+                </Typography>
 
-              {item.levels.map((level, levelIndex) => (
-                <ButtonSecondary
-                  key={levelIndex}
-                  label={level}
-                  variant={"contained"}
-                  isActive={activeButton === level}
-                  onClick={() => handleButtonClick(level)}
-                />
-              ))}
-            </Grid>
-          ))}
+                {Array.isArray(level.academic_tracks) &&
+                  level.academic_tracks.map((track, trackIndex) => (
+                    <ButtonSecondary
+                      key={track.id || trackIndex}
+                      label={trankName(track.name)}
+                      variant={"contained"}
+                      isActive={activeButton === track.id}
+                      onClick={() => handleButtonClick(track.id)}
+                    />
+                  ))}
+              </Grid>
+            ))}
           <Grid
             sx={{
               textAlign: "center",
@@ -103,7 +120,7 @@ function TopNavbar({ titlesWithLevels }) {
             <CreateDialog
               open={open}
               handleClose={handleClose}
-              titre={"Création de professeurs"}
+              titre={"Création de Niveau"}
               champs={[
                 { label: "Nom", name: "nom" },
                 { label: "Effectif", name: "effectif" },

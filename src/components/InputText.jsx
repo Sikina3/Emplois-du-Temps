@@ -1,12 +1,13 @@
 import { TextField } from "@mui/material";
 
-function InputText({label, sx, value}){
+function InputText({label, sx, value, onChange}){
     return (
         <>
         <TextField
         placeholder= {label}
         variant="outlined"
         value={value}
+        onChange={onChange}
         InputLabelProps={{ shrink: false }} 
         sx={{
           backgroundColor: "#fff",

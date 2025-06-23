@@ -9,23 +9,15 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import InputText from "../components/InputText";
 import ButtonSelect from "../components/buttons/ButtonSelect";
 import URL_API from "../config/api";
+import CreateDialog from "../components/CreateDialog";
 
 function App() {
-  const titre = [
-    { titre: "Licence 1", levels: ["tronc commun"] },
-    { titre: "licence 2", levels: ["tronc commun"] },
-    { titre: "Licence 3", levels: ["Maths info", "Ac. Info"] },
-    {
-      titre: "Master 1",
-      levels: ["Ing. Maths", "img. Interaction", "genie info"],
-    },
-    {
-      titre: "Master 2",
-      levels: ["Ing. Maths", "img. Interaction", "genie info"],
-    },
-  ];
+  const [levels, setLevels] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [professors, setProfessors] = useState([]); // État pour les professeurs
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [newSubject, setNewSubject] = useState({ name: "", professor_id: "" }); // État pour le nouveau sujet
 
   useEffect(() => {
     fetch(`${URL_API}/subject`)
@@ -33,13 +25,29 @@ function App() {
       .then((data) => {
         setSubjects(data);
         setLoading(false);
-        console.log("Fetched subjects: ", data);
       })
       .catch((error) => {
-        console.error("Error: ", error);
         setLoading(false);
       });
-  }, []);
+
+    fetch(`${URL_API}/level`)
+      .then((response) => response.json())
+      .then((data) => {
+        setLevels(data);
+      })
+      .catch((error) => {
+        console.error("Erreur : ", error);
+      });
+
+    fetch(`${URL_API}/professor`) // Récupérer les professeurs
+      .then((response) => response.json())
+      .then((data) => {
+        setProfessors(data);
+      })
+      .catch((error) => {
+        console.error("Erreur : ", error);
+      });
+  });
 
   const uniqueLetters = [
     ...new Set(
@@ -48,11 +56,46 @@ function App() {
         .map((titre) => titre.name[0].toUpperCase())
     ),
   ];
-  console.log("Unique letters:", uniqueLetters);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleInputChange = (field, value) => {
+    setNewSubject((prevState) => ({ ...prevState, [field]: value }));
+  };
+
+  const addSubject = async () => {
+    try {
+      const response = await fetch(`${URL_API}/subject`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
+        body: JSON.stringify(newSubject),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSubjects((prevSubjects) => [...prevSubjects, data]);
+        setOpen(false);
+      } else {
+        const errorData = await response.json();
+        console.error("Erreur lors de la création de la matière :", errorData);
+      }
+    } catch (error) {
+      console.error("Erreur : ", error);
+    }
+  };
 
   return (
     <>
-      <TopNavbar titlesWithLevels={titre} />
+      <TopNavbar levels={levels} />
       <div className="container">
         <Custom_Sidebar />
 
@@ -87,7 +130,29 @@ function App() {
                   label={"Crée un nouveau module"}
                   startIcon={<AddIcon />}
                   variant={"contained"}
+                  onClick={handleOpen}
                 />
+
+                <CreateDialog
+                  open={open}
+                  handleClose={handleClose}
+                  titre={"Création de matière"}
+                  champs={[
+                    { label: "Nom: ", name: "name" },
+                    {
+                      label: "Professeur",
+                      name: "professor_id",
+                      type: "select",
+                      options: professors.map((p) => ({
+                        label: `${p.firstname} ${p.name}`,
+                        value: p.id,
+                      })),
+                    },
+                  ]}
+                  onInputChange={handleInputChange}
+                  onClick={addSubject}
+                />
+
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <Typography variant="overline">trier par :</Typography>
                   <ButtonSelect
@@ -106,7 +171,6 @@ function App() {
                 {uniqueLetters.map((letter, index) => (
                   <div key={index} className="card-wrapper">
                     <CardSubject titles={subjects} letter={letter} />
-                    {console.log(letter)}
                   </div>
                 ))}
               </div>

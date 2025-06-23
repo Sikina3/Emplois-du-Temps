@@ -25,6 +25,7 @@ export default function ViewDialog({
   handleClose,
   open,
   salles,
+  openCreateDialog
 }) {  
   const [rowPer, setRowPer] = useState(5);
   const [page, setPage] = useState(0);
@@ -50,7 +51,7 @@ export default function ViewDialog({
               <TableRow>
                 <TableCell>Nom</TableCell>
                 <TableCell>
-                  Nombre max de personnes qu'elle peut contenir
+                  Capacité
                 </TableCell>
                 <TableCell>Actions</TableCell>
               </TableRow>
@@ -60,7 +61,7 @@ export default function ViewDialog({
                 .slice(page * rowPer, page * rowPer + rowPer)
                 .map((salle, index) => (
                   <TableRow key={salle.id || index}>
-                    <TableCell>{salle.name}</TableCell>
+                    <TableCell sx={{minWidth: 200}}>{salle.name}</TableCell>
                     <TableCell>{salle.capacity}</TableCell>
                     <TableCell>
                       <IconButton
@@ -96,8 +97,10 @@ export default function ViewDialog({
           label={"Ajouter"}
           variant={"contained"}
           sx={{ width: "100%" }}
+          onClick={openCreateDialog}
         />
       </DialogActions>
     </Dialog>
+    
   );
 }

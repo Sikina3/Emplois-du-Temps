@@ -29,12 +29,14 @@ function ButtonSelect({ options = [], placeholder = "Choisir...", onChange }) {
           sx: { padding: "10px" },
         }}
         renderValue={(selected) =>
-          selected ? selected : <span style={{ color: "#aaa" }}>{placeholder}</span>
+          selected
+            ? options.find((option) => option.value === selected)?.label || selected
+            : <span style={{ color: "#aaa" }}>{placeholder}</span>
         }
       >
         {options.map((option, index) => (
-          <MenuItem key={index} value={option}>
-            {option}
+          <MenuItem key={index} value={option.value}>
+            {option.label}
           </MenuItem>
         ))}
       </Select>

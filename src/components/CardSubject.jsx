@@ -9,17 +9,15 @@ import {
 import ButtonSecondary from "./buttons/ButtonSecondary";
 
 function CardSubject({ titles, letter, sx }) {
-  console.log("Titles:", titles);
-  console.log("Letter:", letter);
   
-  const filtreTitle = titles.filter((subject) =>
-    subject.name.toLowerCase().startsWith(letter.toLowerCase())
-  );
+  const filtreTitle = titles?.filter((subject) =>
+    subject?.name?.toLowerCase().startsWith(letter?.toLowerCase())
+  ) || [];
 
   return (
     <Card sx={{ maxWidth: 300, marginBottom: 2, ...sx }}>
       <CardHeader
-        title={letter.toUpperCase()}
+        title={letter?.toUpperCase() || "N"}
         sx={{ backgroundColor: "#A1B4C6", height: 6 }}
         titleTypographyProps={{
           variant: "body2",

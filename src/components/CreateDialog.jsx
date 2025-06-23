@@ -7,9 +7,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import Typography from '@mui/material/Typography';
 import InputText from './InputText';
 import CustomButton from './buttons/CustomButton';
+import ButtonSelect from './buttons/ButtonSelect';
 
 const BootstrapDialog = styled(Dialog)(({theme}) => ({
     '& .MuiDialogContent-root': {
@@ -20,7 +20,7 @@ const BootstrapDialog = styled(Dialog)(({theme}) => ({
     },
 }));
 
-export default function CreateDialog({handleClose, open, titre, onClick, champs})  {
+export default function CreateDialog({ handleClose, open, titre, onClick, champs, onInputChange, newProf })  {
     return (
         <React.Fragment>
             <BootstrapDialog
@@ -44,17 +44,38 @@ export default function CreateDialog({handleClose, open, titre, onClick, champs}
                     <CloseIcon/>
                 </IconButton>
                 <DialogContent dividers sx={{width: "600px",}}>
-                    {champs.map((champ) => (
-                        <InputText 
-                            label={champ.name}
-                            sx={{width: "100%", marginBottom: 1.5}}/>
-                    ))}
+                    {champs.map((champ) => {
+                        const champType = champ.type || "text";
+
+                        if(champType === "select"){
+                            return(
+                                <ButtonSelect
+                                    key={champ.name}
+                                    options={champ.options || []}
+                                    placeholder={champ.label}
+                                    onChange={(val) => onInputChange(champ.name, val)}
+                                />
+                            );
+                        }
+                         return (
+                            <InputText 
+                                key={champ.name}
+                                label={champ.label}
+                                sx={{width: "100%", marginBottom: 1.5}}
+                                onChange={(e) => {
+                                    onInputChange(champ.name, e.target.value)
+                                }}
+                            />
+                        );
+                    })}
                 </DialogContent>
                 <DialogActions>
                     <CustomButton 
                         label={"Ajouter"} 
                         variant={"contained"}
-                        sx={{paddingX: 10, paddingY: 1}}/>
+                        sx={{paddingX: 10, paddingY: 1}}
+                        onClick={onClick}
+                    />
                 </DialogActions>
             </BootstrapDialog>
         </React.Fragment>

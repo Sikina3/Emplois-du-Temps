@@ -15,23 +15,77 @@ import URL_API from "../../config/api";
 function Custom_Sidebar() {
   const [activeButton, setActiveButton] = useState("Tout les professeurs");
   const [open, setOpen] = useState(false);
+  const [openSalle, setOpenSalle] = useState(false);
   const [openView, setOpenView] = useState(false);
   const [profs, setProfs] = useState([]);
   const [salles, setSalles] = useState([]);
+  const [newProf, setNewProf] = useState({ name: "", firstname: "" });
+  const [newSalle, setNewSalle] = useState({ name: "", capacity: "" });
 
   useEffect(() => {
     fetch(`${URL_API}/classroom`)
       .then((response) => response.json())
       .then((data) => setSalles(data))
       .catch((error) => console.error("Error: ", error));
-  }, []);
 
-  useEffect(() => {
     fetch(`${URL_API}/professor`)
       .then((response) => response.json())
-      .then((data) => setProfs(data))
+      .then((data) => {
+        setProfs(data);
+      })
       .catch((error) => console.error("Error: ", error));
-  }, []);
+  });
+
+  const add_teach = async () => {
+    try {
+      const response = await fetch(`${URL_API}/professor`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
+        body: JSON.stringify(newProf),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProfs((prevProfs) => [...prevProfs, data]);
+        setOpen(false);
+      } else {
+        const errorData = await response.json();
+        console.error("Error lors de creation de professeurs");
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
+  const add_classroom = async () => {
+    try {
+      const response = await fetch(`${URL_API}/classroom`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
+        body: JSON.stringify(newSalle),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSalles((prevSalles) => [...prevSalles, data]);
+        console.log("Salles: ", data);
+        setOpenView(true);
+        setOpenSalle(false);
+      } else {
+        const errorData = await response.json();
+        console.error("Error lors de creation de salle");
+        console.log("Données envoyées:", newSalle);
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
 
   const handleButtonClick = (label) => {
     setActiveButton(label);
@@ -50,6 +104,28 @@ function Custom_Sidebar() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleAdd = (event) => {
+    event.preventDefault();
+    add_teach();
+  };
+
+  const handleAddSalle = (event) => {
+    event.preventDefault();
+    add_classroom();
+  };
+
+  const handleInputChange = (field, value) => {
+    setNewProf((prevState) => ({ ...prevState, [field]: value }));
+  };
+
+  const handleSalleInputChange = (field, value) => {
+    setNewSalle((prevState) => ({ ...prevState, [field]: value }));
+  };
+
+  const handleOpenCreateDialog = () => {
+    setOpenSalle(true);
   };
 
   return (
@@ -92,9 +168,12 @@ function Custom_Sidebar() {
           handleClose={handleClose}
           titre={"Création de professeurs"}
           champs={[
-            { label: "Nom", name: "nom" },
-            { label: "Prenom", name: "Prenom" },
+            { label: "Nom", name: "name" },
+            { label: "Prenom", name: "firstname" },
           ]}
+          onInputChange={handleInputChange}
+          onClick={handleAdd}
+          newProf={newProf}
         />
       </Box>
 
@@ -114,21 +193,21 @@ function Custom_Sidebar() {
           height: "calc(100vh - 390px)",
           overflowY: "auto",
           "&::-webkit-scrollbar": {
-            width: "8px", 
+            width: "8px",
           },
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#A1B4C6", 
-            borderRadius: "4px"
+            backgroundColor: "#A1B4C6",
+            borderRadius: "4px",
           },
           "&::-webkit-scrollbar-track": {
-            backgroundColor: "transparent", 
+            backgroundColor: "transparent",
           },
         }}
       >
         {profs.map((prof, index) => (
           <ButtonSecondary
             key={prof.id || index}
-            label={`${prof.name}  ${prof.firstname} `}
+            label={`${prof.name || ""}  ${prof.firstname || ""} `}
             variant={"contained"}
             sx={{
               width: "100%",
@@ -157,6 +236,19 @@ function Custom_Sidebar() {
         handleClose={handleCloseClassroom}
         open={openView}
         salles={salles}
+        openCreateDialog={handleOpenCreateDialog}
+      />
+      <CreateDialog
+        open={openSalle}
+        handleClose={() => setOpenSalle(false)}
+        titre={"Création de salle"}
+        champs={[
+          { label: "Nom", name: "name" },
+          { label: "Capacité", name: "capacity" },
+        ]}
+        onInputChange={handleSalleInputChange}
+        onClick={handleAddSalle}
+        newSalle={newSalle}
       />
     </Box>
   );
