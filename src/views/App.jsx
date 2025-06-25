@@ -10,14 +10,21 @@ import InputText from "../components/InputText";
 import ButtonSelect from "../components/buttons/ButtonSelect";
 import URL_API from "../config/api";
 import CreateDialog from "../components/CreateDialog";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   const [levels, setLevels] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  const [professors, setProfessors] = useState([]); // État pour les professeurs
+  const [professors, setProfessors] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [newSubject, setNewSubject] = useState({ name: "", professor_id: "" }); // État pour le nouveau sujet
+
+  const navigate = useNavigate();
+
+  const redirectPage = () => {
+    navigate('/modif');
+  }
 
   useEffect(() => {
     fetch(`${URL_API}/subject`)
@@ -185,6 +192,7 @@ function App() {
                   label="Generer"
                   variant={"contained"}
                   sx={{ paddingY: 0.5, paddingX: 6 }}
+                  onClick={redirectPage}
                 />
               </div>
             </>
