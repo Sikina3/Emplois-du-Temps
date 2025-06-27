@@ -57,8 +57,7 @@ export default function ViewDialog({
               </TableRow>
             </TableHead>
             <TableBody>
-              {salles
-                .slice(page * rowPer, page * rowPer + rowPer)
+              {salles?.slice(page * rowPer, page * rowPer + rowPer)
                 .map((salle, index) => (
                   <TableRow key={salle.id || index}>
                     <TableCell sx={{minWidth: 200}}>{salle.name}</TableCell>
@@ -85,7 +84,7 @@ export default function ViewDialog({
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={salles.length}
+          count={salles?.length}
           rowsPerPage={rowPer}
           page={page}
           onPageChange={ChangePage}

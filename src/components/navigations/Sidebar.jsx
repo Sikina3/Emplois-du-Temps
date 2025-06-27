@@ -9,83 +9,24 @@ import ButtonSecondary from "../buttons/ButtonSecondary";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CreateDialog from "../CreateDialog";
 import ViewDialog from "../ViewDialog";
+import { useProfesseurs } from "../../services/useProfesseurs";
+import { useClassroom } from "../../services/useClassroom";
 
-import URL_API from "../../config/api";
 
 function Custom_Sidebar() {
   const [activeButton, setActiveButton] = useState("Tout les professeurs");
   const [open, setOpen] = useState(false);
   const [openSalle, setOpenSalle] = useState(false);
   const [openView, setOpenView] = useState(false);
-  const [profs, setProfs] = useState([]);
-  const [salles, setSalles] = useState([]);
   const [newProf, setNewProf] = useState({ name: "", firstname: "" });
   const [newSalle, setNewSalle] = useState({ name: "", capacity: "" });
 
-  useEffect(() => {
-    fetch(`${URL_API}/classroom`)
-      .then((response) => response.json())
-      .then((data) => setSalles(data))
-      .catch((error) => console.error("Error: ", error));
+  const { getAll: getAllProf, create: createProf} = useProfesseurs();
+  const { data: profData } = getAllProf();
 
-    fetch(`${URL_API}/professor`)
-      .then((response) => response.json())
-      .then((data) => {
-        setProfs(data);
-      })
-      .catch((error) => console.error("Error: ", error));
-  });
+  const { getAll: getAllClass, create: createClass } = useClassroom();
+  const { data: dataClass} = getAllClass();
 
-  const add_teach = async () => {
-    try {
-      const response = await fetch(`${URL_API}/professor`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "application/json",
-        },
-        body: JSON.stringify(newProf),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setProfs((prevProfs) => [...prevProfs, data]);
-        setOpen(false);
-      } else {
-        const errorData = await response.json();
-        console.error("Error lors de creation de professeurs");
-      }
-    } catch (error) {
-      console.error("Error: ", error);
-    }
-  };
-
-  const add_classroom = async () => {
-    try {
-      const response = await fetch(`${URL_API}/classroom`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "application/json",
-        },
-        body: JSON.stringify(newSalle),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setSalles((prevSalles) => [...prevSalles, data]);
-        console.log("Salles: ", data);
-        setOpenView(true);
-        setOpenSalle(false);
-      } else {
-        const errorData = await response.json();
-        console.error("Error lors de creation de salle");
-        console.log("Données envoyées:", newSalle);
-      }
-    } catch (error) {
-      console.error("Error: ", error);
-    }
-  };
 
   const handleButtonClick = (label) => {
     setActiveButton(label);
@@ -108,12 +49,17 @@ function Custom_Sidebar() {
 
   const handleAdd = (event) => {
     event.preventDefault();
-    add_teach();
+    createProf.mutate(newProf);
+    setOpen(false);
+    setNewProf({name: "", firstname: ""});
   };
 
   const handleAddSalle = (event) => {
     event.preventDefault();
-    add_classroom();
+    createClass.mutate(newSalle);
+    setOpenSalle(false);
+    setNewSalle({name: "", capacity: ""});
+    
   };
 
   const handleInputChange = (field, value) => {
@@ -204,7 +150,7 @@ function Custom_Sidebar() {
           },
         }}
       >
-        {profs.map((prof, index) => (
+        {profData?.map((prof, index) => (
           <ButtonSecondary
             key={prof.id || index}
             label={`${prof.name || ""}  ${prof.firstname || ""} `}
@@ -235,7 +181,7 @@ function Custom_Sidebar() {
       <ViewDialog
         handleClose={handleCloseClassroom}
         open={openView}
-        salles={salles}
+        salles={dataClass}
         openCreateDialog={handleOpenCreateDialog}
       />
       <CreateDialog

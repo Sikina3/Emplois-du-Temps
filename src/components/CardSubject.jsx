@@ -27,8 +27,8 @@ function CardSubject({ titles, letter, sx }) {
         }}
       />
       <CardContent>
-        {filtreTitle.length > 0 ? (
-          filtreTitle.map((subject, index) => (
+        {filtreTitle?.length > 0 ? (
+          filtreTitle?.map((subject, index) => (
             <ButtonSecondary
               key={subject.id || index}
               startIcon={<Checkbox />}

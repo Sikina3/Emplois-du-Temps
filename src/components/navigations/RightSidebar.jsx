@@ -4,6 +4,7 @@ import ButtonSecondary from "../buttons/ButtonSecondary";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useEffect, useState } from "react";
 import URL_API from "../../config/api";
+import { useLevels } from "../../services/useLevels";
 
 function getShortTrack(name) {
     if (name.includes("Informatique")) return "Info";
@@ -15,23 +16,14 @@ function getShortTrack(name) {
   
 
 function Right_sidebar() {
-  const [levels, setLevels] = useState([]);
   const [activeButton, setActiveButton] = useState("");
 
   const handleButtonClick = (label) => {
     setActiveButton(label);
   };
 
-  useEffect(() => {
-    fetch(`${URL_API}/level`)
-      .then((response) => response.json())
-      .then((data) => {
-        setLevels(data);
-      })
-      .catch((error) => {
-        console.error("Erreur : ", error);
-      });
-  }, []);
+  const { getAll: getAllLevels } = useLevels();
+  const { data: levelData } = getAllLevels();
 
   return (
     <Box
@@ -74,8 +66,7 @@ function Right_sidebar() {
           },
         }}
       >
-        {levels
-          .flatMap((level) =>
+        {levelData?.flatMap((level) =>
             level.academic_tracks.map((track) => {
               const shortName = level.name
                 .replace("Licence", "L")

@@ -7,7 +7,11 @@ div .container {
 
 .left-div {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     padding: 30px 80px 0px 80px;
+    height: 100vh;
+    box-sizing: border-box;
 }
 
 /* eto */
@@ -39,8 +43,10 @@ div .container {
   
   .custom-table {
     width: 100%;
+    flex: 1;
     border-collapse: collapse;
     margin-bottom: 20px;
+    overflow-y: auto;
   }
   
   .custom-table th,
@@ -67,6 +73,9 @@ div .container {
   .action-buttons {
     display: flex;
     gap: 20px;
+    /* background-color: #1976d2; */
     justify-content: flex-end;
+    padding: 16px;
+    margin-top: auto;
   }
   

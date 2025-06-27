@@ -17,15 +17,17 @@ function Modif() {
     <>
       <div className="container">
         <Box className="left-div">
-          <CustomButton
-            label="Revenir en arrière pour continuer la création"
-            startIcon={<ChevronLeftIcon />}
-            onClick={redirectPage}
-          />
+          <Box>
+            <CustomButton
+              label="Revenir en arrière pour continuer la création"
+              startIcon={<ChevronLeftIcon />}
+              onClick={redirectPage}
+            />
+          </Box>
 
           <Box className="instruction-box">
-            <HelpIcon sx={{width: 80, height: 80, color: "#5FC2BA"}}/>
-            <Box sx={{flex: 1,  alignContent: "center"}}>
+            <HelpIcon sx={{ width: 80, height: 80, color: "#5FC2BA" }} />
+            <Box sx={{ flex: 1, alignContent: "center" }}>
               <p>
                 Pour finaliser la création de l’emploi du temps du{" "}
                 <span className="date">Lundi 17 Mars 2024</span>, vous pouvez
