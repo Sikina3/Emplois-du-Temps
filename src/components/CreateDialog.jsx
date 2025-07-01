@@ -20,7 +20,7 @@ const BootstrapDialog = styled(Dialog)(({theme}) => ({
     },
 }));
 
-export default function CreateDialog({ handleClose, open, titre, onClick, champs, onInputChange, newProf })  {
+export default function CreateDialog({ handleClose, open, titre, onClick, champs, onInputChange, sxSelect })  {
     return (
         <React.Fragment>
             <BootstrapDialog
@@ -44,7 +44,7 @@ export default function CreateDialog({ handleClose, open, titre, onClick, champs
                     <CloseIcon/>
                 </IconButton>
                 <DialogContent dividers sx={{width: "600px",}}>
-                    {champs.map((champ) => {
+                    {champs?.map((champ) => {
                         const champType = champ.type || "text";
 
                         if(champType === "select"){
@@ -54,6 +54,7 @@ export default function CreateDialog({ handleClose, open, titre, onClick, champs
                                     options={champ.options || []}
                                     placeholder={champ.label}
                                     onChange={(val) => onInputChange(champ.name, val)}
+                                    sx={{...sxSelect}}
                                 />
                             );
                         }

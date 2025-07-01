@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import "../styles/App.css";
 import Custom_Sidebar from "../components/navigations/Sidebar";
 import TopNavbar from "../components/navigations/TopNavBar";
@@ -10,24 +10,54 @@ import InputText from "../components/InputText";
 import ButtonSelect from "../components/buttons/ButtonSelect";
 import { useLevels } from "../services/useLevels";
 import { useSubjects } from "../services/useSubjects";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useProfesseurs } from "../services/useProfesseurs";
 import CreateDialog from "../components/CreateDialog";
 
 function App() {
+  const [currentProfId, setCurrentProfId] = useState(null);
+  const [currentAcademicId, setCurrentAcademicId] = useState(null);
+
   const {getAll: getAllLevels, create: createLevel} = useLevels();
   const { data: levelData } = getAllLevels();
 
-  const { getAll: getAllSubjects, create: createSubject } = useSubjects();
+  const subjectService = useSubjects();
+  const { getAll: getAllSubjects, create: createSubject} = subjectService;
+  const linkSub = subjectService.linkToTrack();
   const { data: subjects} = getAllSubjects();
 
   const { getAll: getAllProf } = useProfesseurs();
   const { data: profData } = getAllProf();
 
+  const { data: subTrack } = subjectService.getByAcademicTrack(currentAcademicId);
+
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
   const [newSubject, setNewSubject] = useState({ name: "", professor_id: "" });
+  const [trackSub, setTrackSub] = useState("");
+  const [activeSidebar, setActiveSidebar] = useState("Tout les professeurs");
+  const [activeProfId, setprofId] = useState(null);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const profId = searchParams.get("profId");
+    const academicId = searchParams.get("academicId");
+
+    setCurrentProfId(profId);
+    setCurrentAcademicId(academicId);
+  }, [location.search]);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams();
+    if (currentProfId) searchParams.set("profId", currentProfId);
+    if (currentAcademicId) searchParams.set("academicId", currentAcademicId);
+
+    navigate(`?${searchParams.toString()}`, { replace: true });
+  }, [currentProfId, currentAcademicId, navigate]);
+  
 
   const redirectPage = () => {
     navigate("/modif");
@@ -38,27 +68,78 @@ function App() {
   ].filter(Boolean);
 
   const handleInputChange = (field, value) => {
-    setNewSubject((prevState) => ({ ...prevState, [field]: value }));
-  };
+    if (field === "academic_track_id") {
+      setTrackSub(value);
+    } else {
+      setNewSubject((prev) => ({ ...prev, [field]: value }));
+    }
+  };  
+
+  function getShortTrack(name) {
+    if (name.includes("Informatique")) return "Info";
+    if (name.includes("Math")) return "Maths";
+    if (name.includes("Genie")) return "Genie";
+    if (name.includes("Interaction")) return "Image";
+    return name;
+  }
 
   const handleAddSubject = (event) => {
     event.preventDefault();
-    createSubject.mutate(newSubject);
+    createSubject.mutate(newSubject, {
+      onSuccess: (data) => {
+        if(trackSub && data?.Subject?.id){
+          console.log("TOnga eto");
+          linkSub.mutate({
+            subjectId: data?.Subject?.id,
+            trackId: trackSub
+          });
+          console.log("Ary eto>?>");
+        }
+      }
+    });    
     setOpen(false);
     setNewSubject({ name: "", professor_id: "" });
+    setTrackSub("");
   };
-  
+
+  const sidebarButtonClick = (label, professorId) => {
+    setActiveSidebar(label);
+    setprofId(professorId);
+  };
+
+  const subTrackId = currentAcademicId ? subTrack : subjects;
+  const filtre = subTrackId?.filter((subject) => {
+    const matchProf = activeProfId ? subject.professor_id === activeProfId : true;
+    return matchProf ;
+  });
+
+  const filteredLetters = uniqueLetters.filter((letter) =>
+    filtre?.some((subject) =>
+      subject?.name?.toLowerCase().startsWith(letter.toLowerCase())
+    )
+  );
+
   return (
     <>
-      <TopNavbar levels={levelData} />
+      <TopNavbar 
+        levels={levelData}
+        onSelectAcademicTrack={(id) => setCurrentAcademicId(id)}
+        currentAcademicTrack={currentAcademicId} 
+      />
       <div className="container">
-        <Custom_Sidebar />
+        <Custom_Sidebar 
+          onButtonClick={(label, professorId) => {
+            sidebarButtonClick(label, professorId);
+            setCurrentProfId(professorId)
+          }}
+          currentProfessorId={currentProfId}
+        />
 
         <div className="right-div">
           <div className="div-chearch">
             {/** Place du bar de recherche */}
             <Typography variant="overline">
-              Tout les cours enseignés par :
+              Tout les cours enseignés par {activeSidebar && `: ${activeSidebar}`}
             </Typography>
 
             <InputText label={"Rechercher une matiere"} sx={{ width: "50%" }} />
@@ -87,9 +168,29 @@ function App() {
                         value: p.id,
                       })),
                     },
+                    {
+                      label: "Parcours",
+                      name: "academic_track_id",
+                      type: "select",
+                      options: levelData?.flatMap((level) =>
+                        level.academic_tracks.map((p) => {
+                        const short = level.name
+                          .replace("Licence", "L")
+                          .replace("Master", "M");
+                        const suffix = 
+                          p.name.toLowerCase() === "tronc commun"
+                            ? ""
+                            : " " + getShortTrack(p.name);
+                        return {
+                          label: short + suffix,
+                          value: p.id,
+                        };
+                      })),
+                    },
                   ]}
                   onInputChange={handleInputChange}
                   onClick={handleAddSubject}
+                  sxSelect={{border: "0.5px solid gray"}}
                 />
 
             <div style={{display: "flex", alignItems: "center"}}>
@@ -107,9 +208,9 @@ function App() {
           <div className="cards-container">
             {" "}
             {/**Les cards  */}
-            {uniqueLetters.map((letter, index) => (
+            {filteredLetters.map((letter, index) => (
               <div key={index} className="card-wrapper">
-                <CardSubject titles={subjects} letter={letter} />
+                <CardSubject titles={filtre} letter={letter} />
               </div>
             ))}
           </div>

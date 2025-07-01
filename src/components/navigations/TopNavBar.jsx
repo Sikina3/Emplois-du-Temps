@@ -7,15 +7,19 @@ import { Grid } from "@mui/material";
 import ButtonSecondary from "../buttons/ButtonSecondary";
 import FabButton from "../buttons/FabButton";
 import CreateDialog from "../CreateDialog";
+import { useAcademicTrack } from "../../services/useAcademicTrack";
+import CreateLevelDialog from "../CreateLevelDialog";
 
-function TopNavbar({ levels }) {
-  const [activeButton, setActiveButton] = useState("Tout Niveau");
+function TopNavbar({ levels, onSelectAcademicTrack, currentAcademicTrack }) {
+  const [activeButton, setActiveButton] = useState(currentAcademicTrack || "Tout Niveau");
+  const [open, setOpen] = React.useState(false);
 
   const handleButtonClick = (label) => {
     setActiveButton(label);
+    if(onSelectAcademicTrack){
+      onSelectAcademicTrack(label === "Tout Niveau" ? null : label);
+    }
   };
-
-  const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -117,15 +121,13 @@ function TopNavbar({ levels }) {
               Invisible
             </Typography>
             <FabButton size={"small"} onClick={handleClickOpen} />
-            <CreateDialog
+
+            <CreateLevelDialog
               open={open}
-              handleClose={handleClose}
+              close={handleClose}
               titre={"Création de Niveau"}
-              champs={[
-                { label: "Nom", name: "nom" },
-                { label: "Effectif", name: "effectif" },
-              ]}
-            />
+              levels={levels}
+              />
           </Grid>
         </Grid>
       </Toolbar>

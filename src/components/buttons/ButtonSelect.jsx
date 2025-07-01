@@ -1,7 +1,7 @@
 import { FormControl, MenuItem, Select } from "@mui/material";
 import { useState } from "react";
 
-function ButtonSelect({ options = [], placeholder = "Choisir...", onChange }) {
+function ButtonSelect({ options = [], placeholder = "Choisir...", onChange , sx}) {
   const [value, setValue] = useState("");
 
   const handleChange = (event) => {
@@ -10,7 +10,7 @@ function ButtonSelect({ options = [], placeholder = "Choisir...", onChange }) {
   };
 
   return (
-    <FormControl sx={{minWidth: "200px"}}>
+    <FormControl sx={{minWidth: "200px", ...sx}}>
       <Select
         value={value}
         onChange={handleChange}

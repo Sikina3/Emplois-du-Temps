@@ -14,6 +14,14 @@ const apiService = {
 
   remove: (resource, id) =>
     axios.delete(`${URL_API}/${resource}/${id}`, data).then((res) => res.data),
+
+  linkSubjectToTrack: (subjectId, trackId) =>
+    axios
+      .patch(`${URL_API}/subject/${subjectId}/link/academicTrack/${trackId}`)
+      .then((res) => res.data),
+
+  getTrack: (resource, param) => 
+    axios.get(`${URL_API}/${resource}`, {param}).then((res) => res.data),
 };
 
 export default apiService;

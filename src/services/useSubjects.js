@@ -18,16 +18,27 @@ export const useSubjects = () => {
   const update = () =>
     useMutation({
       mutationFn: ({ id, data }) => apiService.update("subject", id, data),
-      onSuccess: () =>
-        queryClient.invalidateQueries({ queryKey: ["subject"] }),
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["subject"] }),
     });
 
   const remove = () =>
     useMutation({
       mutationFn: (id) => apiService.remove("subject", id),
-      onSuccess: () =>
-        queryClient.invalidateQueries({ queryKey: ["subject"] }),
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["subject"] }),
     });
 
-  return { getAll, create, update, remove };
+  const linkToTrack = () =>
+    useMutation({
+      mutationFn: ({ subjectId, trackId }) =>
+        apiService.linkSubjectToTrack(subjectId, trackId),
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["subject"] }),
+    });
+
+  const getByAcademicTrack = (academicTrackId) =>
+    useQuery({
+      queryKey: ["subject", academicTrackId],
+      queryFn: () => apiService.getTrack("subject", { academicTrackId }),
+    });
+
+  return { getAll, create, update, remove, linkToTrack, getByAcademicTrack };
 };

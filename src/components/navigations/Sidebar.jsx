@@ -13,7 +13,7 @@ import { useProfesseurs } from "../../services/useProfesseurs";
 import { useClassroom } from "../../services/useClassroom";
 
 
-function Custom_Sidebar() {
+function Custom_Sidebar({ onButtonClick, currentProfessorId }) {
   const [activeButton, setActiveButton] = useState("Tout les professeurs");
   const [open, setOpen] = useState(false);
   const [openSalle, setOpenSalle] = useState(false);
@@ -27,9 +27,20 @@ function Custom_Sidebar() {
   const { getAll: getAllClass, create: createClass } = useClassroom();
   const { data: dataClass} = getAllClass();
 
+  useEffect(() => {
+    if(!currentProfessorId){
+      setActiveButton("Tout les professeurs");
+    } else {
+      const find = profData?.find((p) => p.id === parseInt(currentProfessorId));
+      if(find){
+        setActiveButton(`${find.name} ${find.firstname}`);
+      }
+    }
+  }, [currentProfessorId, profData]);
 
-  const handleButtonClick = (label) => {
+  const handleButtonClick = (label, professorId = null) => {
     setActiveButton(label);
+    onButtonClick(label, professorId);
   };
 
   const handleOpenClassroom = () => {
@@ -160,8 +171,8 @@ function Custom_Sidebar() {
               fontSize: "12px",
               justifyContent: "space-between",
             }}
-            isActive={activeButton === prof.id}
-            onClick={() => handleButtonClick(prof.id)}
+            isActive={activeButton === `${prof.name} ${prof.firstname}`}
+            onClick={() => handleButtonClick(`${prof.name} ${prof.firstname}`, prof.id)}
             endIcon={<MoreVertIcon />}
           />
         ))}
