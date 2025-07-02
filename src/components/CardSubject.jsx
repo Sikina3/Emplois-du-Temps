@@ -21,10 +21,25 @@ function CardSubject({ titles, letter, sx }) {
   const [subSubMenuAnchors, setSubSubMenuAnchors] = useState({});
   const [openSubSubMenuKey, setOpenSubSubMenuKey] = useState(null);
 
-  const cours = ["Cours 1", "Cours 2", "Cours 3"];
   const jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
   const parties = ["Matin", "Après-midi"];
   const [checkSubjects, setCheckSubjects] = useState([]);
+  const [subjectCounts, setSubjectCounts] = useState({});
+  const [activeSubId, setActiveSubId] = useState(null);
+
+  const AddMultipleSub = (id) => {
+    setSubjectCounts((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 1) + 1,
+    }));
+  };
+
+  const MinusMultipleSub = (id) => {
+    setSubjectCounts((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 1) - 1,
+    }));
+  }
 
   const handleCheckBoxChange= (id) => {
     setCheckSubjects((prev) => 
@@ -34,8 +49,9 @@ function CardSubject({ titles, letter, sx }) {
     );
   };
 
-  const handleMenu = (event) => {
+  const handleMenu = (event, subjectId) => {
     setMenuAnchor(event.currentTarget);
+    setActiveSubId(subjectId);
   };
 
   const handleCloseAll = () => {
@@ -65,6 +81,7 @@ function CardSubject({ titles, letter, sx }) {
         {filtreTitle?.length > 0 ? (
           filtreTitle?.map((subject, index) => {
             const isCheck = checkSubjects.includes(subject.id || index); 
+            const count = subjectCounts[subject.id] || 1;
             return(
             <ButtonSecondary
               key={subject.id || index}
@@ -87,13 +104,13 @@ function CardSubject({ titles, letter, sx }) {
                   {isCheck && (
                     <>
                       <Box sx={{display: "flex",alignItems: "center"}}>
-                        <RemoveIcon sx={{fontSize: "16px", backgroundColor: "blueviolet", color: "white", borderRadius: "8px 0 0 8px"}}/>
-                        <Typography sx={{fontSize: "12px", backgroundColor: "green", color: "white"}}> 1 fois </Typography>
-                        <AddIcon sx={{fontSize: "16px", backgroundColor: "blueviolet", color: "white", borderRadius: "0px 8px 8px 0px"}}/>
+                        <RemoveIcon sx={{fontSize: "16px", backgroundColor: "blueviolet", color: "white", borderRadius: "8px 0 0 8px"}} onClick={() => MinusMultipleSub(subject.id)}/>
+                        <Typography sx={{fontSize: "12px", backgroundColor: "green", color: "white"}}> {count} fois </Typography>
+                        <AddIcon sx={{fontSize: "16px", backgroundColor: "blueviolet", color: "white", borderRadius: "0px 8px 8px 0px"}} onClick={() =>AddMultipleSub(subject.id)}/>
                         </Box>
                         <CalendarMonthIcon
                           sx={{ color: "#555", cursor: "pointer" }}
-                          onClick={handleMenu}
+                          onClick={(e) => handleMenu(e, subject.id)}
                         />
                     </>
                   )}
@@ -121,7 +138,7 @@ function CardSubject({ titles, letter, sx }) {
         open={Boolean(menuAnchor)}
         onClose={handleCloseAll}
       >
-        {cours.map((coursName, index) => (
+        {[...Array(subjectCounts[activeSubId] || 1)].map((_, index) =>(
           <MenuItem
             key={index}
             onMouseEnter={(e) =>
@@ -131,7 +148,7 @@ function CardSubject({ titles, letter, sx }) {
               setSubMenuAnchors((prev) => ({ ...prev, [index]: null }))
             }
           >
-            {coursName}
+            Cours {index + 1}
 
             {/* Sous menu 1  */}
             <Menu
