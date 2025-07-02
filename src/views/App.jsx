@@ -77,7 +77,7 @@ function App() {
 
   function getShortTrack(name) {
     if (name.includes("Informatique")) return "Info";
-    if (name.includes("Math")) return "Maths";
+    if (name.includes("Mathématiques")) return "Maths";
     if (name.includes("Genie")) return "Genie";
     if (name.includes("Interaction")) return "Image";
     return name;
@@ -108,6 +108,7 @@ function App() {
   };
 
   const subTrackId = currentAcademicId ? subTrack : subjects;
+  console.log("SubTrackId: ", subTrackId);
   const filtre = subTrackId?.filter((subject) => {
     const matchProf = activeProfId ? subject.professor_id === activeProfId : true;
     return matchProf ;
@@ -177,12 +178,8 @@ function App() {
                         const short = level.name
                           .replace("Licence", "L")
                           .replace("Master", "M");
-                        const suffix = 
-                          p.name.toLowerCase() === "tronc commun"
-                            ? ""
-                            : " " + getShortTrack(p.name);
                         return {
-                          label: short + suffix,
+                          label: `${short} ${p.name}`,
                           value: p.id,
                         };
                       })),

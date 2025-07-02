@@ -33,12 +33,14 @@ div .right-div {
     overflow-y: auto;
     padding: 10px;
     /* background-color: brown; */
+    justify-content: center;
     height: 50vh;
     scroll-behavior: smooth;
   }
   
   .card-wrapper {
-    width: 25%;
+    width: 30%;
+    /* background-color: blue; */
     box-sizing: border-box;
     padding: 10px;
   }

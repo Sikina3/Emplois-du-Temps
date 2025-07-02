@@ -20,8 +20,10 @@ const apiService = {
       .patch(`${URL_API}/subject/${subjectId}/link/academicTrack/${trackId}`)
       .then((res) => res.data),
 
-  getTrack: (resource, param) => 
-    axios.get(`${URL_API}/${resource}`, {param}).then((res) => res.data),
+  getTrack: (resource, param) =>
+    axios
+      .get(`${URL_API}/${resource}`, { params: param }) //teto adinoko nanao params de tsy nety nandeh le filtre
+      .then((res) => res.data),
 };
 
 export default apiService;
