@@ -200,8 +200,9 @@ const debouceCounts = useDebouce(subjectCounts, 800);
                           <RemoveIcon
                             sx={{
                               fontSize: "16px",
-                              backgroundColor: "blueviolet",
+                              backgroundColor: " #d8bfd8",
                               color: "white",
+                              height: 18,
                               borderRadius: "8px 0 0 8px",
                               cursor: "pointer",
                             }}
@@ -210,7 +211,7 @@ const debouceCounts = useDebouce(subjectCounts, 800);
                           <Typography
                             sx={{
                               fontSize: "12px",
-                              backgroundColor: "green",
+                              backgroundColor: "#b0c4de",
                               color: "white",
                             }}
                           >
@@ -219,7 +220,7 @@ const debouceCounts = useDebouce(subjectCounts, 800);
                           <AddIcon
                             sx={{
                               fontSize: "16px",
-                              backgroundColor: "blueviolet",
+                              backgroundColor: "#d8bfd8",
                               color: "white",
                               height: 18,
                               borderRadius: "0px 8px 8px 0px",
