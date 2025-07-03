@@ -34,7 +34,7 @@ function CardSubject({ titles, letter, sx, timetableId }) {
   const [activeCourseIndex, setActiveCourseIndex] = useState(null); 
 const [activeJourKey, setActiveJourKey] = useState(null); 
 const [activePartieKey, setActivePartieKey] = useState(null); 
-const debouceCounts = useDebouce(subjectCounts, 800);
+const debouceCounts = useDebouce(subjectCounts, 1000);
 
 
   const AddMultipleSub = (id) => {
@@ -80,29 +80,36 @@ const debouceCounts = useDebouce(subjectCounts, 800);
       subject?.name?.toLowerCase().startsWith(letter?.toLowerCase())
     ) || [];
 
+    const [alredySave, setAlreadySave] = useState({});
     useEffect(() => {
       const saveCourse = async () => {
-        for(const subjectId in debouceCounts) {
+        const saveSubject = new Set(); // Pour eviter les doublons de foisSub
+    
+        for (const subjectId in debouceCounts) {
           const count = debouceCounts[subjectId];
-
-          for(let i = 0; i < count; i++){
-            try {
-              await apiService.create("course", {
-                duration: 1,
-                subject_id: subjectId,
-                timetable_id: timetableId,
-              });
-            } catch (error){
-              console.error("erreur lors de l'enregistrement du cours: ", error);
+    
+          for (let i = 0; i < count; i++) {
+            const key = `${subjectId}-${i}`;
+            if (!saveSubject.has(key)) {
+              try {
+                await apiService.create("course", {
+                  duration: 1,
+                  subject_id: subjectId,
+                  timetable_id: timetableId,
+                });
+                saveSubject.add(key); 
+              } catch (error) {
+                console.error("Erreur lors de l'enregistrement du cours: ", error);
+              }
             }
           }
         }
       };
-
-      if(timetableId && Object.keys(debouceCounts).length > 0){
+    
+      if (timetableId && Object.keys(debouceCounts).length > 0) {
         saveCourse();
       }
-    }, [debouceCounts]);
+    }, [debouceCounts, timetableId]);
 
 
   return (

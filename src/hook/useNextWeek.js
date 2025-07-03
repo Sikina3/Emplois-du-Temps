@@ -5,6 +5,7 @@ export const useNextWeek = () => {
   const { getAll, create } = useTimetable();
   const { data: timetables, isFetching } = getAll();
   const [timetableId, setTimetableId] = useState(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   const nextMonday = useMemo(() => {
     const today = new Date();
@@ -15,23 +16,25 @@ export const useNextWeek = () => {
   }, []);
 
   useEffect(() => {
-    if (isFetching || !timetables) return;
+    if (isFetching || !timetables || isCreating) return;
 
     const found = timetables.find((t) => t.weekOf === nextMonday);
 
     if (found) {
       setTimetableId(found.id);
     } else {
+      setIsCreating(true);
       create.mutate(
         { weekOf: nextMonday },
         {
           onSuccess: (res) => {
             setTimetableId(res?.Timetable?.id);
+            setIsCreating(false);
           },
         }
       );
     }
-  }, [isFetching, timetables, nextMonday, create]);
+  }, [isFetching, timetables, nextMonday, create, isCreating]);
 
   return timetableId;
 };
