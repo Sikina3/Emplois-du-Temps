@@ -36,5 +36,5 @@ export const useNextWeek = () => {
     }
   }, [isFetching, timetables, nextMonday, create, isCreating]);
 
-  return timetableId;
+  return { timetableId, nextMonday };
 };

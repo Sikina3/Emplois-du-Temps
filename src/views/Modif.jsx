@@ -5,12 +5,24 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import "../styles/modif.css";
 import HelpIcon from "@mui/icons-material/Help";
 import { useNavigate } from "react-router-dom";
+import { useNextWeek} from "../hook/useNextWeek";
 
 function Modif() {
   const navigate = useNavigate();
+  const {timetableId, nextMonday} = useNextWeek();
 
   const redirectPage = () => {
     navigate("/");
+  };
+
+  const formatDate = (d) => {
+    const date = new Date(d);
+    return date.toLocaleDateString("fr-FR", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
   return (
@@ -30,7 +42,7 @@ function Modif() {
             <Box sx={{ flex: 1, alignContent: "center" }}>
               <p>
                 Pour finaliser la création de l’emploi du temps du{" "}
-                <span className="date">Lundi 17 Mars 2024</span>, vous pouvez
+                <span className="date">{formatDate(nextMonday) }</span>, vous pouvez
                 supprimer ou déplacer des cours dans d’autres salles ou d’autres
                 jours.
               </p>
