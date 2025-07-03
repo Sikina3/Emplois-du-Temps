@@ -13,6 +13,7 @@ import { useSubjects } from "../services/useSubjects";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useProfesseurs } from "../services/useProfesseurs";
 import CreateDialog from "../components/CreateDialog";
+import { useNextWeek } from "../hook/useNextWeek"; 
 
 function App() {
   const [currentProfId, setCurrentProfId] = useState(null);
@@ -40,6 +41,7 @@ function App() {
   const [activeProfId, setprofId] = useState(null);
 
   const location = useLocation();
+  const nextWeek = useNextWeek();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -75,25 +77,15 @@ function App() {
     }
   };  
 
-  function getShortTrack(name) {
-    if (name.includes("Informatique")) return "Info";
-    if (name.includes("Mathématiques")) return "Maths";
-    if (name.includes("Genie")) return "Genie";
-    if (name.includes("Interaction")) return "Image";
-    return name;
-  }
-
   const handleAddSubject = (event) => {
     event.preventDefault();
     createSubject.mutate(newSubject, {
       onSuccess: (data) => {
         if(trackSub && data?.Subject?.id){
-          console.log("TOnga eto");
           linkSub.mutate({
             subjectId: data?.Subject?.id,
             trackId: trackSub
           });
-          console.log("Ary eto>?>");
         }
       }
     });    
@@ -108,7 +100,6 @@ function App() {
   };
 
   const subTrackId = currentAcademicId ? subTrack : subjects;
-  console.log("SubTrackId: ", subTrackId);
   const filtre = subTrackId?.filter((subject) => {
     const matchProf = activeProfId ? subject.professor_id === activeProfId : true;
     return matchProf ;
@@ -197,7 +188,6 @@ function App() {
               <ButtonSelect
                 options={["Ordre alphabetique", "Par niveau", "Option 3"]}
                 placeholder="Sélectionner un module"
-                onChange={(val) => console.log("Tu as choisi :", val)}
               />
             </div>
           </div>
@@ -207,7 +197,10 @@ function App() {
             {/**Les cards  */}
             {filteredLetters.map((letter, index) => (
               <div key={index} className="card-wrapper">
-                <CardSubject titles={filtre} letter={letter} />
+                <CardSubject 
+                  titles={filtre} 
+                  letter={letter}
+                  timetableId={nextWeek} />
               </div>
             ))}
           </div>
