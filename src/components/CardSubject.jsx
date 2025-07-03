@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import {
@@ -34,7 +34,7 @@ function CardSubject({ titles, letter, sx, timetableId }) {
   const [activeCourseIndex, setActiveCourseIndex] = useState(null); 
 const [activeJourKey, setActiveJourKey] = useState(null); 
 const [activePartieKey, setActivePartieKey] = useState(null); 
-const debouceCounts = useDebouce(subjectCounts, 1000);
+const debouceCounts = useDebouce(subjectCounts, 800);
 
 
   const AddMultipleSub = (id) => {
@@ -55,6 +55,11 @@ const debouceCounts = useDebouce(subjectCounts, 1000);
     setCheckSubjects((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
+
+    setSubjectCounts((prev) => ({
+      ...prev,
+      [id]: prev[id] || 1,
+    }));
   };
 
   const handleMenu = (event, subjectId) => {
@@ -81,23 +86,49 @@ const debouceCounts = useDebouce(subjectCounts, 1000);
     ) || [];
 
     const [alredySave, setAlreadySave] = useState({});
+    const saveCountRef = useRef({});
+
+    useEffect(() => {
+      const fetchSavedCourses = async () => {
+        try {
+          const allCourses = await apiService.get("course", { timetable_id: timetableId});
+          const counts = {};
+    
+          allCourses?.forEach(course => {
+            const subId = course.subject_id;
+            counts[subId] = (counts[subId] || 0) + 1;
+          });
+    
+          saveCountRef.current = counts;
+        } catch (err) {
+          console.error("Erreur lors de la récupération des cours existants :", err);
+        }
+      };
+    
+      if (timetableId) {
+        fetchSavedCourses();
+      }
+    }, [timetableId]);    
+
     useEffect(() => {
       const saveCourse = async () => {
-        const saveSubject = new Set(); // Pour eviter les doublons de foisSub
-    
         for (const subjectId in debouceCounts) {
-          const count = debouceCounts[subjectId];
+          const desiredCount = debouceCounts[subjectId];
+          const alreadySaved = saveCountRef.current[subjectId] || 0;
     
-          for (let i = 0; i < count; i++) {
-            const key = `${subjectId}-${i}`;
-            if (!saveSubject.has(key)) {
+          const missing = desiredCount - alreadySaved;
+    
+          if (missing > 0) {
+            for (let i = 0; i < missing; i++) {
               try {
                 await apiService.create("course", {
                   duration: 1,
                   subject_id: subjectId,
                   timetable_id: timetableId,
                 });
-                saveSubject.add(key); 
+    
+                saveCountRef.current[subjectId] = alreadySaved + i + 1;
+    
               } catch (error) {
                 console.error("Erreur lors de l'enregistrement du cours: ", error);
               }
@@ -110,6 +141,7 @@ const debouceCounts = useDebouce(subjectCounts, 1000);
         saveCourse();
       }
     }, [debouceCounts, timetableId]);
+    
 
 
   return (
